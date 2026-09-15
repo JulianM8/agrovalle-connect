@@ -1,33 +1,49 @@
+# Maven y compilación
 HELP.md
 target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+!.mvn/wrapper/maven-wrapper.jar
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# Java
+*.class
+*.log
 
-### IntelliJ IDEA ###
-.idea
+# IntelliJ IDEA
+.idea/
 *.iws
 *.iml
 *.ipr
 
-### NetBeans ###
+# Eclipse 
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+.apt_generated
+
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
+# Gradle
+build/
+
+# Visual Studio Code
 .vscode/
+
+# Node.js y Husky
+node_modules/
+
+# Variables de entorno y configuraciones locales
+.env
+*.env
+application-local.properties
+application-local.yml
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
