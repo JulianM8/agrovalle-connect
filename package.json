@@ -1,0 +1,24 @@
+{
+  "name": "agrovalle-connect",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JulianM8/agrovalle-connect.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/JulianM8/agrovalle-connect/issues"
+  },
+  "homepage": "https://github.com/JulianM8/agrovalle-connect#readme",
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
