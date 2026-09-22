@@ -18,12 +18,12 @@ El sistema busca resolver tres problemas estructurales: la intermediación exces
 
 ## 2. Equipo
 
-| Integrante | Rol en el Sprint 0 |
+| Integrante | Rol |
 |---|---|
-| _Josen Julian Mina Carabali_ | Scrum Master / Líder técnico — Git & estructura base |
-| _Josue Mindineros Castillo_  | Calidad y automatización — Checkstyle & Husky |
-| _Lesly Camila Quintero Popo_ | Product Owner — Backlog (Historias de Usuario) |
-| _Yenni Liseth Obando Obando_ | QA / Documentación — Definition of Done |
+| _Josen Julian Mina Carabali_ | Scrum Master |
+| _Josue Mindineros Castillo_  | Backend / DevOps |
+| _Lesly Camila Quintero Popo_ | Product Owner |
+| _Yenni Liseth Obando Obando_ | QA / Documentador |
 
 ## 3. Estrategia de Ramas: GitFlow
 
