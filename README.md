@@ -27,7 +27,7 @@ El sistema busca resolver tres problemas estructurales: la intermediación exces
 
 ## 3. Estrategia de Ramas: GitFlow
 
-### Justificación frente a GitFlow
+### Justificación de GitFlow
 
 El equipo eligió **GitFlow** porque el proyecto tiene entregas por sprint claramente delimitadas (evaluaciones del curso), lo que encaja con la separación que GitFlow hace entre una rama estable (`main`), una rama de integración continua del trabajo del equipo (`develop`) y ramas de vida corta para cada historia de usuario (`feature/*`). Esto minimiza los tiempos de espera y previene conflictos de fusión extensos porque:
 
@@ -50,12 +50,12 @@ gitGraph
    merge chore/config-dependencias tag: "PR aprobado"
    branch feature/HU-config-calidad
    checkout feature/HU-config-calidad
-   commit id: "feat(calidad): checkstyle, husky y H2"
+   commit id: "feat: checkstyle, husky y H2"
    checkout develop
    merge feature/HU-config-calidad tag: "PR aprobado"
    branch feature/HU-product-backlog
    checkout feature/HU-product-backlog
-   commit id: "docs(backlog): 15 HU con MoSCoW y Fibonacci"
+   commit id: "docs: 15 HU con MoSCoW y Fibonacci"
    checkout develop
    merge feature/HU-product-backlog tag: "PR aprobado"
    branch feature/HU-documentacion
