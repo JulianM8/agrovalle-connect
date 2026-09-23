@@ -175,7 +175,7 @@ Estimación: **Story Points** en escala de Fibonacci, acordados por el equipo me
 ---
 
 ### HU-14: Calificación y Opinión del Usuario
-**Como** agricultor, **quiero** calificar al usuario después de finalizar el pedido **para** registrar su comportamiento y contribuir a la confianza entre los usuarios de la plataforma.
+**Como** usuario, **quiero** calificar al agricultor después de finalizar el pedido **para** registrar su comportamiento y contribuir a la confianza entre los demas usuarios de la plataforma.
 
 - **Priorización:** Should have
 - **Estimación:** 3 puntos
