@@ -48,7 +48,7 @@ Estimación: **Story Points** en escala de Fibonacci, acordados por el equipo me
 **Como** usuario, **quiero** filtrar los productos agrícolas por categoría y municipio de origen **para** encontrar rápidamente las ofertas que necesito comprar.
 
 - **Priorización:** Must have
-- **Estimación:** 3 puntos
+- **Estimación:** 5 puntos
 
 **Escenario BDD:**
 - **Given** existen productos agrícolas publicados en el catálogo, clasificados por categorías como frutas, verduras y tubérculos.
@@ -71,7 +71,7 @@ Estimación: **Story Points** en escala de Fibonacci, acordados por el equipo me
 ---
 
 ### HU-06: Asignación de Vehículo de Transporte
-**Como** agricultor, **quiero** asignar un vehículo adecuado a mi pedido confirmado **para** asegurar que la mercancía sea transportada de forma segura hasta el usuario.
+**Como** agricultor, **quiero** asignar un vehículo al pedido confirmado **para** asegurar que la mercancía llegue al usuario.
 
 - **Priorización:** Must have
 - **Estimación:** 5 puntos
@@ -84,7 +84,7 @@ Estimación: **Story Points** en escala de Fibonacci, acordados por el equipo me
 ---
 
 ### HU-07: Programación de Rutas de Despacho
-**Como** transportista, **quiero** consultar una ruta organizada para mis entregas **para** realizar los despachos de manera eficiente y reducir los tiempos de recorrido.
+**Como** transportista, **quiero** gestionar una ruta organizada para mis entregas **para** realizar los despachos de manera eficiente y reducir los tiempos de recorrido.
 
 - **Priorización:** Must have
 - **Estimación:** 5 puntos
@@ -209,4 +209,4 @@ Estimación: **Story Points** en escala de Fibonacci, acordados por el equipo me
 | **Could have** | HU-12 |
 | **Won't have (este sprint)** | — |
 
-**Total Story Points del backlog:** 56
+**Total Story Points del backlog:** 58
