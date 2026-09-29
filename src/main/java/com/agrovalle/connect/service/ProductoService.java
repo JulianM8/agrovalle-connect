@@ -9,6 +9,7 @@ import com.agrovalle.connect.model.Producto;
 import com.agrovalle.connect.repository.AgricultorRepository;
 import com.agrovalle.connect.repository.ProductoRepository;
 import java.time.LocalDate;
+import java.util.List;
 import org.springframework.stereotype.Service;
  
 /**
@@ -25,6 +26,21 @@ public class ProductoService {
       AgricultorRepository agricultorRepository) {
     this.productoRepository = productoRepository;
     this.agricultorRepository = agricultorRepository;
+  }
+
+  /**
+   * Busca productos disponibles por el municipio del agricultor y su categoría.
+   *
+   * @param municipio municipio de origen del agricultor
+   * @param categoria categoría del producto
+   * @return productos coincidentes con unidades disponibles
+   */
+  public List<Producto> buscarDisponiblesPorMunicipioYCategoria(
+      String municipio, String categoria) {
+    return productoRepository.findByAgricultorMunicipioAndCategoria(municipio, categoria)
+        .stream()
+        .filter(producto -> producto.getCantidad() > 0)
+        .toList();
   }
  
   /**
