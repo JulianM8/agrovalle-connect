@@ -124,4 +124,18 @@ class ProductoControllerTest {
     mockMvc.perform(get("/api/v1/productos").param("municipio", "Palmira"))
         .andExpect(status().isBadRequest());
   }
+
+  @Test
+  void debeMostrarMensajeCuandoNoHayProductosDisponibles() throws Exception {
+    when(productoService.buscarDisponiblesPorMunicipioYCategoria("Palmira", "Frutas"))
+        .thenReturn(List.of());
+
+    mockMvc.perform(get("/api/v1/productos")
+            .param("categoria", "Frutas")
+            .param("municipio", "Palmira"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.productos").isEmpty())
+        .andExpect(jsonPath("$.mensaje")
+            .value("No hay proveedores del producto en ese municipio."));
+  }
 }

@@ -53,7 +53,10 @@ public class ProductoController {
         .stream()
         .map(this::convertirAConsulta)
         .toList();
-    return ResponseEntity.ok(new ProductoFiltroResponse(productos, null));
+    String mensaje = productos.isEmpty()
+        ? "No hay proveedores del producto en ese municipio."
+        : null;
+    return ResponseEntity.ok(new ProductoFiltroResponse(productos, mensaje));
   }
 
   private ProductoConsultaResponse convertirAConsulta(Producto producto) {
