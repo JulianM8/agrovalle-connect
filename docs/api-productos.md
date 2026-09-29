@@ -40,3 +40,24 @@ la lista queda vacía. Si falta alguno de los parámetros, responde `400 Bad Req
   "mensaje": "No hay proveedores del producto en ese municipio."
 }
 ```
+
+## Datos de demostración
+
+El archivo `src/main/resources/data.sql` contiene datos ficticios para verificar el filtro en
+PostgreSQL. Se cargan al iniciar la aplicación con el perfil `demo`; las inserciones evitan
+duplicar agricultores y productos si se reinicia la aplicación.
+
+Con `DB_PASSWORD` configurada para la base PostgreSQL local, inicia la aplicación así:
+
+```powershell
+$env:SPRING_PROFILES_ACTIVE = "demo"
+.\mvnw.cmd spring-boot:run
+```
+
+El conjunto incluye Aguacate Hass disponible en Palmira, Banano Cavendish disponible en Cali,
+Yuca Amarilla disponible en Tuluá y Tomate Chonto agotado en Palmira. Por ejemplo,
+`GET /api/v1/productos?categoria=Frutas&municipio=Palmira` devuelve Aguacate Hass, mientras que
+`GET /api/v1/productos?categoria=Verduras&municipio=Palmira` devuelve la lista vacía y el mensaje
+de ausencia de proveedores.
+
+Las pruebas usan H2 y desactivan la carga de este conjunto para conservar fixtures aisladas.
