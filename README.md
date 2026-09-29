@@ -101,3 +101,8 @@ git checkout -b feature/HU0X-descripcion-corta
 git push origin feature/HU0X-descripcion-corta
 # Abrir Pull Request hacia develop, asignar 1-2 revisores, esperar aprobación
 ```
+
+## 6. API del catálogo
+
+El catálogo permite consultar productos por categoría y municipio. El contrato del endpoint,
+los parámetros y los ejemplos de respuesta están en [API de productos](docs/api-productos.md).
