@@ -17,6 +17,7 @@ import com.agrovalle.connect.repository.AgricultorRepository;
 import com.agrovalle.connect.repository.ProductoRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,6 +47,16 @@ class ProductoServiceTest {
   private ProductoPublicacionRequest crearRequestValido() {
     return new ProductoPublicacionRequest(
         1L, "Aguacate", "Frutas", 50, new BigDecimal("3500"), LocalDate.now().plusDays(5));
+  }
+
+  private Producto crearProducto(String nombre, Integer cantidad) {
+    return new Producto(
+        nombre,
+        "Frutas",
+        cantidad,
+        new BigDecimal("3500"),
+        LocalDate.now().plusDays(5),
+        crearAgricultor());
   }
  
   @Test
@@ -89,5 +100,31 @@ class ProductoServiceTest {
         () -> productoService.publicar(crearRequestValido()));
  
     verify(productoRepository, never()).save(any(Producto.class));
+  }
+
+  @Test
+  void debeFiltrarProductosDisponiblesPorMunicipioYCategoria() {
+    Producto disponible = crearProducto("Aguacate", 10);
+    Producto agotado = crearProducto("Banano", 0);
+    when(productoRepository.findByAgricultorMunicipioAndCategoria("Palmira", "Frutas"))
+        .thenReturn(List.of(disponible, agotado));
+
+    List<Producto> respuesta = productoService
+        .buscarDisponiblesPorMunicipioYCategoria("Palmira", "Frutas");
+
+    assertEquals(List.of(disponible), respuesta);
+    verify(productoRepository).findByAgricultorMunicipioAndCategoria("Palmira", "Frutas");
+  }
+
+  @Test
+  void debeDevolverListaVaciaCuandoNoHayProductosDisponibles() {
+    Producto agotado = crearProducto("Aguacate", 0);
+    when(productoRepository.findByAgricultorMunicipioAndCategoria("Palmira", "Frutas"))
+        .thenReturn(List.of(agotado));
+
+    List<Producto> respuesta = productoService
+        .buscarDisponiblesPorMunicipioYCategoria("Palmira", "Frutas");
+
+    assertEquals(List.of(), respuesta);
   }
 }
