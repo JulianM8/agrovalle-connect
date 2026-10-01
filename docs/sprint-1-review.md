@@ -22,7 +22,7 @@ Habilitar el registro inicial de agricultores del Valle del Cauca, la publicaci�
 Se realizo una pequeña demostracion en postman de las historias de usuario realizadas en el sprint 1
 
 **Video demostrativo:** 
-[Ver demuestracion](https://drive.google.com/file/d/1UDR1Sya7Gt9pDV_U5utef2_UHC1WBIR_/view?usp=drive_link)
+[Ver demostracion](https://drive.google.com/file/d/1UDR1Sya7Gt9pDV_U5utef2_UHC1WBIR_/view?usp=drive_link)
 
 1. **Registrar agricultor válido** → `POST /api/v1/auth/register` → respuesta **201 Created**, con el agricultor guardado en la tabla `agricultores` de PostgreSQL (verificado en pgAdmin).
 2. **Registrar con identificación duplicada** → misma identificación del paso 1 → respuesta **409 Conflict**.
@@ -59,7 +59,7 @@ Se realizo una pequeña demostracion en postman de las historias de usuario real
 
 ## Video del tablero kanban demostrando el cierre de todas las tareas comprometidas y las ramas creadas
 
-<video controls src="multimedia/video-1.mp4" title="Title"></video>
+[Ver demostracion](https://drive.google.com/file/d/12Qrevwjfo7QjcfUvhW85BysCWmoRbOZY/view?usp=sharing)
 
 ## Algunas capturas de pantalla del flujo en tablero kanban
 
