@@ -48,7 +48,7 @@ class ProductoControllerTest {
 
   private Producto crearProductoConsulta() {
     Agricultor agricultor = new Agricultor(
-        "Juan", "Perez", "111078900", "Palmira", "3001234567", "juan@correo.com");
+        "Juan", "Perez", "1111078900", "Palmira", "3001234567", "juan@correo.com");
     agricultor.setId(1L);
     Producto producto = new Producto(
         "Aguacate",

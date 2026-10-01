@@ -29,12 +29,12 @@ class AgricultorServiceTest {
 
   private AgricultorRegistroRequest crearRequest() {
     return new AgricultorRegistroRequest(
-        "Juan", "Perez", "111078900", "Palmira", "3001234567", "juan@correo.com");
+        "Juan", "Perez", "1111078900", "Palmira", "3001234567", "juan@correo.com");
   }
 
   @Test
   void debeRegistrarAgricultorConDatosValidos() {
-    when(agricultorRepository.existsByIdentificacion("111078900")).thenReturn(false);
+    when(agricultorRepository.existsByIdentificacion("1111078900")).thenReturn(false);
     when(agricultorRepository.save(any(Agricultor.class))).thenAnswer(invocacion -> {
       Agricultor agricultor = invocacion.getArgument(0);
       agricultor.setId(1L);
@@ -52,7 +52,7 @@ class AgricultorServiceTest {
 
   @Test
   void debeRechazarIdentificacionDuplicada() {
-    when(agricultorRepository.existsByIdentificacion("111078900")).thenReturn(true);
+    when(agricultorRepository.existsByIdentificacion("1111078900")).thenReturn(true);
 
     assertThrows(IdentificacionDuplicadaException.class,
         () -> agricultorService.registrar(crearRequest()));
