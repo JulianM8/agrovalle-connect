@@ -24,8 +24,8 @@ class ProductoRepositoryTest {
 
     @Test
     void debeFiltrarPorMunicipioDelAgricultorYCategoria() {
-        Agricultor agricultorPalmira = crearAgricultor("111111", "Palmira");
-        Agricultor agricultorCali = crearAgricultor("222222", "Cali");
+        Agricultor agricultorPalmira = crearAgricultor("1112067800", "Palmira");
+        Agricultor agricultorCali = crearAgricultor("1114780500", "Cali");
         productoRepository.save(crearProducto("Aguacate", "Frutas", agricultorPalmira));
         productoRepository.save(crearProducto("Tomate", "Verduras", agricultorPalmira));
         productoRepository.save(crearProducto("Banano", "Frutas", agricultorCali));
@@ -38,7 +38,7 @@ class ProductoRepositoryTest {
 
     @Test
     void debeDevolverListaVaciaCuandoNoHayCoincidencias() {
-        Agricultor agricultor = crearAgricultor("333333", "Palmira");
+        Agricultor agricultor = crearAgricultor("1111078900", "Palmira");
         productoRepository.save(crearProducto("Aguacate", "Frutas", agricultor));
 
         List<Producto> productos = productoRepository

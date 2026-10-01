@@ -36,13 +36,13 @@ class AgricultorControllerTest {
 
   private AgricultorRegistroRequest crearRequestValido() {
     return new AgricultorRegistroRequest(
-        "Juan", "Perez", "111078900", "Palmira", "3001234567", "juan@correo.com");
+        "Juan", "Perez", "1111078900", "Palmira", "3001234567", "juan@correo.com");
   }
 
   @Test
   void debeRegistrarAgricultorConDatosValidos() throws Exception {
     AgricultorRegistroResponse respuesta = new AgricultorRegistroResponse(
-        1L, "Juan", "Perez", "111078900", "Palmira", "Registro realizado correctamente");
+        1L, "Juan", "Perez", "1111078900", "Palmira", "Registro realizado correctamente");
     when(agricultorService.registrar(any(AgricultorRegistroRequest.class)))
         .thenReturn(respuesta);
 
@@ -56,7 +56,7 @@ class AgricultorControllerTest {
   @Test
   void debeRechazarDatosIncompletos() throws Exception {
     AgricultorRegistroRequest requestInvalido = new AgricultorRegistroRequest(
-        "", "Perez", "111078900", "Palmira", "3001234567", "juan@correo.com");
+        "", "Perez", "1111078900", "Palmira", "3001234567", "juan@correo.com");
 
     mockMvc.perform(post("/api/v1/auth/register")
             .contentType(MediaType.APPLICATION_JSON)
@@ -67,7 +67,7 @@ class AgricultorControllerTest {
   @Test
   void debeRechazarIdentificacionDuplicada() throws Exception {
     when(agricultorService.registrar(any(AgricultorRegistroRequest.class)))
-        .thenThrow(new IdentificacionDuplicadaException("123456"));
+        .thenThrow(new IdentificacionDuplicadaException("1111078900"));
 
     mockMvc.perform(post("/api/v1/auth/register")
             .contentType(MediaType.APPLICATION_JSON)

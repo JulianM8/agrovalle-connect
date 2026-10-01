@@ -24,7 +24,7 @@ public class Agricultor {
   @Column(nullable = false)
   private String apellido;
 
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false, unique = true, length = 10)
   private String identificacion;
 
   @Column(nullable = false)
