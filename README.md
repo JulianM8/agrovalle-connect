@@ -18,16 +18,16 @@ El sistema busca resolver tres problemas estructurales: la intermediación exces
 
 ## 2. Equipo
 
-| Integrante | Rol en el Sprint 0 |
+| Integrante | Rol |
 |---|---|
-| _Josen Julian Mina Carabali_ | Scrum Master / Líder técnico — Git & estructura base |
-| _Josue Mindineros Castillo_  | Calidad y automatización — Checkstyle & Husky |
-| _Lesly Camila Quintero Popo_ | Product Owner — Backlog (Historias de Usuario) |
-| _Yenni Liseth Obando Obando_ | QA / Documentación — Definition of Done |
+| _Josen Julian Mina Carabali_ | Scrum Master |
+| _Josue Mindineros Castillo_  | Backend / DevOps |
+| _Lesly Camila Quintero Popo_ | Product Owner |
+| _Yenni Liseth Obando Obando_ | QA / Documentador |
 
 ## 3. Estrategia de Ramas: GitFlow
 
-### Justificación frente a GitFlow
+### Justificación de GitFlow
 
 El equipo eligió **GitFlow** porque el proyecto tiene entregas por sprint claramente delimitadas (evaluaciones del curso), lo que encaja con la separación que GitFlow hace entre una rama estable (`main`), una rama de integración continua del trabajo del equipo (`develop`) y ramas de vida corta para cada historia de usuario (`feature/*`). Esto minimiza los tiempos de espera y previene conflictos de fusión extensos porque:
 
@@ -50,12 +50,12 @@ gitGraph
    merge chore/config-dependencias tag: "PR aprobado"
    branch feature/HU-config-calidad
    checkout feature/HU-config-calidad
-   commit id: "feat(calidad): checkstyle, husky y H2"
+   commit id: "feat: checkstyle, husky y H2"
    checkout develop
    merge feature/HU-config-calidad tag: "PR aprobado"
    branch feature/HU-product-backlog
    checkout feature/HU-product-backlog
-   commit id: "docs(backlog): 15 HU con MoSCoW y Fibonacci"
+   commit id: "docs: 15 HU con MoSCoW y Fibonacci"
    checkout develop
    merge feature/HU-product-backlog tag: "PR aprobado"
    branch feature/HU-documentacion
@@ -101,3 +101,8 @@ git checkout -b feature/HU0X-descripcion-corta
 git push origin feature/HU0X-descripcion-corta
 # Abrir Pull Request hacia develop, asignar 1-2 revisores, esperar aprobación
 ```
+
+## 6. API del catálogo
+
+El catálogo permite consultar productos por categoría y municipio. El contrato del endpoint,
+los parámetros y los ejemplos de respuesta están en [API de productos](docs/api-productos.md).
