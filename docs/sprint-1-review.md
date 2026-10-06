@@ -57,8 +57,7 @@ Se realizo una pequeña demostracion en postman de las historias de usuario real
 - Sprint Backlog: `BACKLOG.md`
 - Planificación técnica: `docs/sprint-1-planning.md`
 
-## Video del tablero kanban demostrando el cierre de todas las tareas comprometidas y las ramas creadas
-
+**Video del tablero kanban demostrando el cierre de todas las tareas comprometidas y las ramas creadas:**
 [Ver demostracion](https://drive.google.com/file/d/12Qrevwjfo7QjcfUvhW85BysCWmoRbOZY/view?usp=sharing)
 
 ## Algunas capturas de pantalla del flujo en tablero kanban
