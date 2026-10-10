@@ -13,7 +13,7 @@ Estimación: **Story Points** en escala de Fibonacci, acordados por el equipo me
 
 **Escenario BDD:**
 - **Given** el usuario cuenta con información personal válida y desea registrarse como agricultor.
-- **When** completa el formulario con su nombre, número de identificación, municipio y datos de contacto, y selecciona la opción "Registrarse".
+- **When** completa el formulario con su nombre, número de identificación, municipio, teléfono, correo y contraseña, y selecciona la opción "Registrarse".
 - **Then** el sistema guarda la información del agricultor y muestra un mensaje confirmando que el registro se realizó correctamente.
 
 ---
