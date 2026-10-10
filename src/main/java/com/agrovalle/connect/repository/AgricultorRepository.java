@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface AgricultorRepository extends JpaRepository<Agricultor, Long> {
 
   boolean existsByIdentificacion(String identificacion);
+
+  java.util.Optional<Agricultor> findByIdentificacion(String identificacion);
 }
