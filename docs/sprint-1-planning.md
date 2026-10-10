@@ -24,7 +24,7 @@ Habilitar el registro inicial de agricultores del Valle del Cauca, la publicaci�
 
 | ID Tarea | Descripción técnica | Componente / Tecnología | Atributo ISO 25010 |
 |---|---|---|---|
-| T1.1 | Crear la entidad JPA Agricultor (nombre, apellido, identificación única, municipio, teléfono, correo) y generar su tabla en PostgreSQL | Spring Data JPA (@Entity), PostgreSQL | Adecuación funcional |
+| T1.1 | Crear la entidad JPA Agricultor (nombre, apellido, identificación, municipio, teléfono, correo) y generar su tabla en PostgreSQL | Spring Data JPA (@Entity), PostgreSQL | Adecuación funcional |
 | T1.2 | Implementar AgricultorRepository con el método existsByIdentificacion | Spring Data JPA | Mantenibilidad |
 | T1.3 | Definir los DTOs de request y response con validaciones de campos obligatorios | DTOs (record), Bean Validation (@NotBlank, @Email) | Usabilidad |
 | T1.4 | Implementar AgricultorService con la regla que rechaza identificaciones duplicadas | Spring (@Service) | Adecuación funcional |
@@ -43,6 +43,11 @@ Habilitar el registro inicial de agricultores del Valle del Cauca, la publicaci�
 | T2.6 | Definir y documentar el mecanismo con que se identifica al agricultor al publicar (agricultorId o JWT) | Spring Security / JWT (según la decisión) | Seguridad |
 | T2.7 | Escribir pruebas unitarias de la publicación: 201, fecha pasada (400) y agricultor inexistente (404) (traducción del escenario BDD) | JUnit 5, MockMvc | Mantenibilidad |
 
+> **Actualización de T2.6 (posterior al cierre del Sprint 1):** la decisión inicial del 28 de
+> septiembre fue mantener `agricultorId` en el cuerpo de la petición para no ampliar el alcance,
+> el equipo revisó
+> esa decisión y migró a autenticación JWT completa, dado que era un requisito real para la aplicacion.
+
 ### HU-04: Filtro de Categorías
 
 | ID Tarea | Descripción técnica | Componente / Tecnología | Atributo ISO 25010 |
@@ -53,6 +58,16 @@ Habilitar el registro inicial de agricultores del Valle del Cauca, la publicaci�
 | T4.4 | Devolver un mensaje claro cuando no hay proveedores del producto en el municipio | Spring MVC | Usabilidad |
 | T4.5 | Cargar datos de prueba que permitan verificar el filtro | SQL (data.sql), PostgreSQL | Mantenibilidad |
 | T4.6 | Escribir pruebas unitarias del filtro con resultados y sin resultados (traducción del escenario BDD) | JUnit 5, MockMvc | Mantenibilidad |
+
+### Tareas para la actualizacion a jwt
+
+| ID Tarea | Descripción técnica | Componente / Tecnología | Atributo ISO 25010 |
+|---|---|---|---|
+| T1 | Agregar el campo `contrasena` a `Agricultor` (cifrado con BCrypt) y al registro (`AgricultorRegistroRequest`); configurar `PasswordEncoder` | Spring Security (`BCryptPasswordEncoder`) | Seguridad |
+| T2 | Implementar `JwtService` (generación y validación del token) y `AuthService` (login), con `POST /api/v1/auth/login` | `jjwt`, Spring (@Service) | Seguridad |
+| T3 | Implementar `JwtAuthenticationFilter` y reconfigurar `SecurityConfig` en modo `STATELESS`: solo `GET /api/v1/productos` queda público, el resto exige token válido | Spring Security | Seguridad |
+| T4 | Actualizar `ProductoController`/`ProductoService` para tomar el agricultor del token (`Authentication`) en lugar de `agricultorId` del cuerpo, y reescribir las pruebas afectadas (`AuthServiceTest`, `AgricultorControllerTest`, `ProductoControllerTest`, `ProductoServiceTest`) | Spring MVC, JUnit 5, Mockito | Seguridad / Mantenibilidad |
+
 
 ## 4. Traducción obligatoria de escenarios BDD a pruebas JUnit 5
 
@@ -68,6 +83,9 @@ Cada historia comprometida tiene un escenario Given-When-Then que se traduce en 
 | HU-02 | (regla de negocio) agricultor inexistente | `ProductoControllerTest` | `debeRechazarAgricultorInexistente()` | HTTP 404 |
 | HU-04 | Given productos publicados, When filtra por categoría y municipio, Then muestra solo los que coinciden | `ProductoControllerTest` | `debeFiltrarProductosPorCategoriaYMunicipio()` | HTTP 200 con la lista filtrada |
 | HU-04 | (caso alternativo) sin coincidencias | `ProductoControllerTest` | `debeMostrarMensajeCuandoNoHayResultados()` | HTTP 200 con mensaje de "no hay proveedores..." |
+| T2 (actualización) | Given identificación y contraseña correctas, When inicia sesión, Then recibe un token | `AuthServiceTest` | `debeAutenticarConCredencialesValidas()` | Token generado, HTTP 200 en el controlador |
+| T2 (actualización) | (regla de negocio) contraseña incorrecta o identificación inexistente | `AuthServiceTest` | `debeRechazarCredencialesInvalidas()` | `CredencialesInvalidasException` → HTTP 401 |
+| T4 (actualización) | Given token válido, When publica producto, Then usa el agricultor del token, no del cuerpo | `ProductoControllerTest` | `debePublicarUsandoAgricultorDelToken()` | HTTP 201 sin `agricultorId` en el request |
 
 Estas pruebas son las que ejecuta el pipeline de GitHub Actions (`ci.yml`) en cada Pull Request, y las que alimentan el reporte de cobertura de JaCoCo (mínimo 60% para que una tarea pueda pasar a la columna Testing).
 

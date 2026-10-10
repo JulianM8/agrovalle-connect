@@ -1,5 +1,56 @@
 # API de productos
 
+> **Actualización:** a partir de la migración a autenticación JWT, publicar un producto exige
+> haber iniciado sesión. Consultar el catálogo (este documento, sección siguiente) sigue siendo
+> público y no requiere token.
+
+## Iniciar sesión 
+
+`POST /api/v1/auth/login`
+
+| Campo | Tipo | Descripción |
+|---|---|---|
+| `identificacion` | string | Identificación de 10 dígitos del agricultor ya registrado. |
+| `contrasena` | string | Contraseña definida al registrarse (mínimo 8 caracteres). |
+
+```json
+{
+  "identificacion": "1234567890",
+  "contrasena": "clave12345"
+}
+```
+
+Respuesta exitosa (`200 OK`):
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9...",
+  "tipo": "Bearer",
+  "expiraEnMs": 3600000
+}
+```
+
+Si la identificación no existe o la contraseña no coincide, responde `401 Unauthorized`.
+
+## Publicar un producto 
+
+`POST /api/v1/productos`
+
+El agricultor que publica el producto ya **no** se indica con un campo `agricultorId` en el
+cuerpo de la petición: se obtiene del token. Si el encabezado falta o el token es inválido o
+expiró, el endpoint responde `403 Forbidden` (comportamiento por defecto de Spring Security
+para peticiones no autenticadas sobre una ruta protegida).
+
+```json
+{
+  "nombre": "Aguacate",
+  "categoria": "Frutas",
+  "cantidad": 50,
+  "precio": 3500,
+  "fechaCosecha": "2026-10-15"
+}
+```
+
 ## Consultar productos por categoría y municipio
 
 `GET /api/v1/productos`
@@ -41,16 +92,9 @@ la lista queda vacía. Si falta alguno de los parámetros, responde `400 Bad Req
 }
 ```
 
-## Datos de demostración
-
-El archivo `src/main/resources/data.sql` contiene datos ficticios para verificar el filtro en
-PostgreSQL. Se cargan al iniciar la aplicación con el perfil `demo`; las inserciones evitan
-duplicar agricultores y productos si se reinicia la aplicación.
-
 Con `DB_PASSWORD` configurada para la base PostgreSQL local, inicia la aplicación así:
 
 ```powershell
-$env:SPRING_PROFILES_ACTIVE = "demo"
 .\mvnw.cmd spring-boot:run
 ```
 
@@ -60,4 +104,3 @@ Yuca Amarilla disponible en Tuluá y Tomate Chonto agotado en Palmira. Por ejemp
 `GET /api/v1/productos?categoria=Verduras&municipio=Palmira` devuelve la lista vacía y el mensaje
 de ausencia de proveedores.
 
-Las pruebas usan H2 y desactivan la carga de este conjunto para conservar fixtures aisladas.

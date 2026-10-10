@@ -98,4 +98,29 @@ Además, cargué datos de prueba mediante `data.sql` y desarrollé pruebas unita
 
 cierre de de documentacion, verificacion de evidencias y revision de las historias de usuario con sus respectivas tareas para el sprint 1.
 
+---
+
+## Daily — Jueves 8 de octubre de 2026 (posterior al cierre formal del Sprint 1)
+*(Revisión de la decisión de T2.6 y migración a jwt posterior al cierre del sprint)*
+
+
+
+- Ayer: Con el Sprint 1 ya cerrado y entregado, el equipo revisó la decisión tomada el 28
+  de septiembre de mantener `agricultorId` en el cuerpo de la petición para identificar al
+  agricultor al publicar un producto.
+
+- Hoy: todo el equipo participó en la migración a autenticación JWT: se agregó el campo `contrasena` (cifrado con BCrypt)
+  a `Agricultor` y al registro, implementó `JwtService` y `AuthService` con el endpoint
+  `POST /api/v1/auth/login` y creó
+  `JwtAuthenticationFilter`. Actualizó `ProductoController`/`ProductoService` para tomar el
+  agricultor del token en vez del cuerpo, y reescribió las pruebas afectadas
+  (`AgricultorServiceTest`, `AuthServiceTest`, `AgricultorControllerTest`,
+  `ProductoServiceTest`, `ProductoControllerTest`, `ProductoRepositoryTest`).
+- Impedimentos: algunas fallas en los test por una mala implementacion de los cambios o logica faltante en la migracion a JWT, se resolvieron al revisar el flujo de autenticación y la inyección del token en los test.
+
+**Motivo del cambio:** mejorar la seguridad de la aplicación al implementar un sistema de autenticación basado en tokens JWT, ademas de ser un requisito importante para la aplicación.
+
+- En esta misma seccion se planteo la actualizacion de la documentacion entre todo el equipo para reflejar los cambios en la autenticación y el flujo de uso de la API.
+
+
 

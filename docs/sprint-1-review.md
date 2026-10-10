@@ -24,6 +24,9 @@ Se realizo una pequeña demostracion en postman de las historias de usuario real
 **Video demostrativo:** 
 [Ver demostracion](https://drive.google.com/file/d/1UDR1Sya7Gt9pDV_U5utef2_UHC1WBIR_/view?usp=drive_link)
 
+**Video demostrativo enseñando las nuevas pruebas en postman:** 
+[Ver demostracion](https://drive.google.com/file/d/11ClMdmGn77z-2PvT26Ha-sU5X7j9CTqy/view?usp=sharing)
+
 1. **Registrar agricultor válido** → `POST /api/v1/auth/register` → respuesta **201 Created**, con el agricultor guardado en la tabla `agricultores` de PostgreSQL (verificado en pgAdmin).
 2. **Registrar con identificación duplicada** → misma identificación del paso 1 → respuesta **409 Conflict**.
 3. **Registrar con datos incompletos** (nombre vacío, correo inválido) → respuesta **400 Bad Request**.
@@ -60,6 +63,9 @@ Se realizo una pequeña demostracion en postman de las historias de usuario real
 **Video del tablero kanban demostrando el cierre de todas las tareas comprometidas y las ramas creadas:**
 [Ver demostracion](https://drive.google.com/file/d/12Qrevwjfo7QjcfUvhW85BysCWmoRbOZY/view?usp=sharing)
 
+**Video del tablero kanban demostrando las tareas nuevas y el cierre de estas:**
+[Ver demostracion]()
+
 ## Algunas capturas de pantalla del flujo en tablero kanban
 
 **Tablero General**
@@ -78,4 +84,6 @@ Se realizo una pequeña demostracion en postman de las historias de usuario real
 
 ![alt text](multimedia/image-4.png)
 
+**Flujo en las actualizaciones de autenticación JWT**
 
+![alt text](multimedia/image-5.png)
