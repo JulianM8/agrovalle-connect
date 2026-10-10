@@ -7,6 +7,7 @@ import com.agrovalle.connect.exception.IdentificacionDuplicadaException;
 import com.agrovalle.connect.model.Agricultor;
 import com.agrovalle.connect.repository.AgricultorRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * Lógica de negocio para el registro de agricultores.
@@ -15,9 +16,12 @@ import org.springframework.stereotype.Service;
 public class AgricultorService {
 
   private final AgricultorRepository agricultorRepository;
+  
+  private final PasswordEncoder passwordEncoder;
 
-  public AgricultorService(AgricultorRepository agricultorRepository) {
+  public AgricultorService(AgricultorRepository agricultorRepository, PasswordEncoder passwordEncoder) {
     this.agricultorRepository = agricultorRepository;
+    this.passwordEncoder = passwordEncoder;
   }
 
   /**
@@ -25,7 +29,9 @@ public class AgricultorService {
    *
    * @param request datos enviados por el usuario
    * @return datos del agricultor registrado
-   * @throws IdentificacionDuplicadaException si la identificación ya está registrada
+   * @throws IdentificacionDuplicadaException si la identificación ya está
+   *                                          registrada
+   * 
    */
   public AgricultorRegistroResponse registrar(AgricultorRegistroRequest request) {
     if (agricultorRepository.existsByIdentificacion(request.identificacion())) {
@@ -38,7 +44,8 @@ public class AgricultorService {
         request.identificacion(),
         request.municipio(),
         request.telefono(),
-        request.correo());
+        request.correo(),
+        passwordEncoder.encode(request.contrasena()));
 
     Agricultor guardado = agricultorRepository.save(agricultor);
 

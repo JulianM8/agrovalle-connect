@@ -54,7 +54,8 @@ class ProductoRepositoryTest {
                 identificacion,
                 municipio,
                 "3001234567",
-                identificacion + "@correo.com"));
+                identificacion + "@correo.com",
+                "contrasena123"));
     }
 
     private Producto crearProducto(String nombre, String categoria, Agricultor agricultor) {

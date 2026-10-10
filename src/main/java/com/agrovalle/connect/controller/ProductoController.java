@@ -1,5 +1,5 @@
 package com.agrovalle.connect.controller;
- 
+
 import com.agrovalle.connect.dto.ProductoConsultaResponse;
 import com.agrovalle.connect.dto.ProductoFiltroResponse;
 import com.agrovalle.connect.dto.ProductoPublicacionRequest;
@@ -16,24 +16,34 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
- 
+
 /**
-* Expone la publicación y consulta filtrada de productos.
-*/
+ * Expone la publicación y consulta filtrada de productos.
+ */
 @RestController
 @RequestMapping("/api/v1/productos")
 public class ProductoController {
- 
+
   private final ProductoService productoService;
- 
+
   public ProductoController(ProductoService productoService) {
     this.productoService = productoService;
   }
- 
+
+  /**
+   * Publica un producto, validando que el agricultor exista y que la fecha
+   * de cosecha no sea anterior a hoy.
+   *
+   * @param request        datos del producto a publicar
+   * @param authentication información del agricultor autenticado
+   * @return datos del producto publicado con estado HTTP 201
+   */
   @PostMapping
   public ResponseEntity<ProductoPublicacionResponse> publicar(
-      @Valid @RequestBody ProductoPublicacionRequest request) {
-    ProductoPublicacionResponse respuesta = productoService.publicar(request);
+      @Valid @RequestBody ProductoPublicacionRequest request,
+      org.springframework.security.core.Authentication authentication) {
+    Long agricultorId = (Long) authentication.getPrincipal();
+    ProductoPublicacionResponse respuesta = productoService.publicar(request, agricultorId);
     return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
   }
 
@@ -51,7 +61,7 @@ public class ProductoController {
     List<ProductoConsultaResponse> productos = productoService
         .buscarDisponiblesPorMunicipioYCategoria(municipio, categoria)
         .stream()
-        .map(this::convertirAConsulta)
+        .map(producto -> this.convertirAConsulta(producto))
         .toList();
     String mensaje = productos.isEmpty()
         ? "No hay proveedores del producto en ese municipio."

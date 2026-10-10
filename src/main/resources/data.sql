@@ -1,20 +1,20 @@
-INSERT INTO agricultores (nombre, apellido, identificacion, municipio, telefono, correo)
+INSERT INTO agricultores (nombre, apellido, identificacion, municipio, telefono, correo, contrasena)
 SELECT 'Ana', 'Productora Demo', '9000000001', 'Palmira', '3000000001',
-       'ana.demo@agrovalle.test'
+       'ana.demo@agrovalle.test', '$2b$10$uVngY.K.DpsVR5UMA7PzoudjFBt/yMalATYfyxF7SsmdJ7fyOLC7m'
 WHERE NOT EXISTS (
-    SELECT 1 FROM agricultores WHERE identificacion = '900000001'
+    SELECT 1 FROM agricultores WHERE identificacion = '9000000001'
 );
 
-INSERT INTO agricultores (nombre, apellido, identificacion, municipio, telefono, correo)
+INSERT INTO agricultores (nombre, apellido, identificacion, municipio, telefono, correo, contrasena)
 SELECT 'Carlos', 'Productor Demo', '9000000002', 'Cali', '3000000002',
-       'carlos.demo@agrovalle.test'
+       'carlos.demo@agrovalle.test', '$2b$10$uVngY.K.DpsVR5UMA7PzoudjFBt/yMalATYfyxF7SsmdJ7fyOLC7m'
 WHERE NOT EXISTS (
     SELECT 1 FROM agricultores WHERE identificacion = '9000000002'
 );
 
-INSERT INTO agricultores (nombre, apellido, identificacion, municipio, telefono, correo)
+INSERT INTO agricultores (nombre, apellido, identificacion, municipio, telefono, correo, contrasena)
 SELECT 'Maria', 'Productora Demo', '9000000003', 'Tuluá', '3000000003',
-       'maria.demo@agrovalle.test'
+       'maria.demo@agrovalle.test', '$2b$10$uVngY.K.DpsVR5UMA7PzoudjFBt/yMalATYfyxF7SsmdJ7fyOLC7m'
 WHERE NOT EXISTS (
     SELECT 1 FROM agricultores WHERE identificacion = '9000000003'
 );
