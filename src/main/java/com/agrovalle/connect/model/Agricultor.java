@@ -36,17 +36,21 @@ public class Agricultor {
   @Column(nullable = false)
   private String correo;
 
+  @Column(nullable = false)
+  private String contrasena;
+
   public Agricultor() {
   }
 
   public Agricultor(String nombre, String apellido, String identificacion,
-      String municipio, String telefono, String correo) {
+      String municipio, String telefono, String correo, String contrasena) {
     this.nombre = nombre;
     this.apellido = apellido;
     this.identificacion = identificacion;
     this.municipio = municipio;
     this.telefono = telefono;
     this.correo = correo;
+    this.contrasena = contrasena;
   }
 
   public Long getId() {
@@ -103,5 +107,13 @@ public class Agricultor {
 
   public void setCorreo(String correo) {
     this.correo = correo;
+  }
+
+  public String getContrasena() {
+    return contrasena;
+  }
+
+  public void setContrasena(String contrasena) {
+    this.contrasena = contrasena;
   }
 }
