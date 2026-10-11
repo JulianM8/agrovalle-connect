@@ -30,10 +30,6 @@ public class ProductoService {
 
   /**
    * Busca productos disponibles por el municipio del agricultor y su categoría.
-   *
-   * @param municipio municipio de origen del agricultor
-   * @param categoria categoría del producto
-   * @return productos coincidentes con unidades disponibles
    */
   public List<Producto> buscarDisponiblesPorMunicipioYCategoria(
       String municipio, String categoria) {
@@ -46,11 +42,6 @@ public class ProductoService {
   /**
    * Publica un producto, validando que el agricultor exista y que la fecha
    * de cosecha no sea anterior a hoy.
-   *
-   * @param request datos del producto a publicar
-   * @return datos del producto publicado
-   * @throws AgricultorNoEncontradoException si el agricultor no existe
-   * @throws FechaCosechaInvalidaException   si la fecha de cosecha ya pasó
    */
   public ProductoPublicacionResponse publicar(ProductoPublicacionRequest request, Long agricultorId) {
     Agricultor agricultor = agricultorRepository.findById(agricultorId)

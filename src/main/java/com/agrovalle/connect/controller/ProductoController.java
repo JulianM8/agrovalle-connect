@@ -33,10 +33,6 @@ public class ProductoController {
   /**
    * Publica un producto, validando que el agricultor exista y que la fecha
    * de cosecha no sea anterior a hoy.
-   *
-   * @param request        datos del producto a publicar
-   * @param authentication información del agricultor autenticado
-   * @return datos del producto publicado con estado HTTP 201
    */
   @PostMapping
   public ResponseEntity<ProductoPublicacionResponse> publicar(
@@ -49,10 +45,6 @@ public class ProductoController {
 
   /**
    * Consulta productos disponibles por categoría y municipio.
-   *
-   * @param categoria categoría seleccionada
-   * @param municipio municipio de origen seleccionado
-   * @return productos encontrados con estado HTTP 200
    */
   @GetMapping
   public ResponseEntity<ProductoFiltroResponse> filtrar(

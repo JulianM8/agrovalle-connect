@@ -23,6 +23,10 @@ public class AuthService {
     this.jwtService = jwtService;
   }
 
+  /**
+   * Autentica a un agricultor mediante su identificación y contraseña.
+   * Si las credenciales son válidas, genera un token JWT para el agricultor.
+   */
   public LoginResponse login(LoginRequest request) {
     var agricultor = agricultorRepository.findByIdentificacion(request.identificacion())
         .orElseThrow(CredencialesInvalidasException::new);

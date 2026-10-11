@@ -8,6 +8,9 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+/**
+ * Servicio para generar y validar tokens JWT.
+ */
 @Service
 public class JwtService {
 
