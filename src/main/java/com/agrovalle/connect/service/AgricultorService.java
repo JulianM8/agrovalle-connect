@@ -26,12 +26,6 @@ public class AgricultorService {
 
   /**
    * Registra un nuevo agricultor, validando que su identificación no exista.
-   *
-   * @param request datos enviados por el usuario
-   * @return datos del agricultor registrado
-   * @throws IdentificacionDuplicadaException si la identificación ya está
-   *                                          registrada
-   * 
    */
   public AgricultorRegistroResponse registrar(AgricultorRegistroRequest request) {
     if (agricultorRepository.existsByIdentificacion(request.identificacion())) {

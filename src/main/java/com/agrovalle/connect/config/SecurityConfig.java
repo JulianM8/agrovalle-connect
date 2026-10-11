@@ -19,6 +19,10 @@ public class SecurityConfig {
     return new BCryptPasswordEncoder();
   }
 
+  /**
+   * Configura la seguridad de la aplicación, permitiendo el acceso público a
+   * ciertos endpoints y requiriendo autenticación para otros.
+   */
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http, JwtService jwtService)
       throws Exception {

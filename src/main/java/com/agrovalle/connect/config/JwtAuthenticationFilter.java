@@ -19,6 +19,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     this.jwtService = jwtService;
   }
 
+  /**
+   * Filtra las solicitudes HTTP para autenticar a los agricultores mediante JWT.
+   * Si el token es válido, se establece la autenticación en el contexto de seguridad.
+   */ 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {

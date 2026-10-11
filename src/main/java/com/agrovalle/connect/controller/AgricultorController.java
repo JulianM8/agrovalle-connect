@@ -30,6 +30,9 @@ public class AgricultorController {
         this.authService = authService;
     }
 
+    /**
+     * Registra un nuevo agricultor, validando que su identificación no exista.
+     */
     @PostMapping("/register")
     public ResponseEntity<AgricultorRegistroResponse> registrar(
             @Valid @RequestBody AgricultorRegistroRequest request) {
@@ -37,6 +40,10 @@ public class AgricultorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
     }
 
+    /**
+     * Autentica a un agricultor mediante su identificación y contraseña.
+     * Si las credenciales son válidas, genera un token JWT para el agricultor.
+     */
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
