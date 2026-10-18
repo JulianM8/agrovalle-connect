@@ -26,7 +26,7 @@ Estimación: **Story Points** en escala de Fibonacci, acordados por el equipo me
 
 **Escenario BDD:**
 - **Given** un agricultor está registrado en la aplicación y desea ofrecer un producto de su cosecha.
-- **When** ingresa el nombre del producto, la categoría, la cantidad disponible, el precio y la fecha estimada de recolección y selecciona la opción "Publicar producto".
+- **When** ingresa el nombre del producto, la categoría, la cantidad disponible, la unidad de medida, el precio por unidad y la fecha estimada de recolección y selecciona la opción "Publicar producto".
 - **Then** el sistema valida que la fecha no sea anterior a hoy y muestra el producto en el catálogo para que los compradores puedan consultarlo.
 
 ---
@@ -144,7 +144,7 @@ Estimación: **Story Points** en escala de Fibonacci, acordados por el equipo me
 **Escenario BDD:**
 - **Given** el usuario realizó y aprobó el pago de un pedido de cosechas.
 - **When** la compra es procesada por el sistema y el pedido queda pendiente de entrega.
-- **Then** el pago permanece en estado retenido y solo se habilita su liberación al productor cuando el agricultor confirma la recepción o se resuelve una eventual inconformidad según las condiciones establecidas.
+- **Then** el pago permanece en estado retenido y solo se habilita su liberación al productor cuando el usuario confirma la recepción o se resuelve una eventual inconformidad según las condiciones establecidas.
 
 ---
 
