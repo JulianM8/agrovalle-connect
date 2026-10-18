@@ -13,6 +13,7 @@ import com.agrovalle.connect.exception.AgricultorNoEncontradoException;
 import com.agrovalle.connect.exception.FechaCosechaInvalidaException;
 import com.agrovalle.connect.model.Agricultor;
 import com.agrovalle.connect.model.Producto;
+import com.agrovalle.connect.model.enums.UnidadMedida;
 import com.agrovalle.connect.repository.AgricultorRepository;
 import com.agrovalle.connect.repository.ProductoRepository;
 import java.math.BigDecimal;
@@ -46,7 +47,8 @@ class ProductoServiceTest {
 
   private ProductoPublicacionRequest crearRequestValido() {
     return new ProductoPublicacionRequest(
-        "Aguacate", "Frutas", 50, new BigDecimal("3500"), LocalDate.now().plusDays(5));
+        "Aguacate", "Frutas", 50, UnidadMedida.KILOGRAMO,
+        new BigDecimal("3500"), LocalDate.now().plusDays(5));
   }
 
   @Test
@@ -72,7 +74,8 @@ class ProductoServiceTest {
     when(agricultorRepository.findById(1L)).thenReturn(Optional.of(agricultor));
 
     ProductoPublicacionRequest requestFechaPasada = new ProductoPublicacionRequest(
-        "Aguacate", "Frutas", 50, new BigDecimal("3500"), LocalDate.now().minusDays(1));
+        "Aguacate", "Frutas", 50, UnidadMedida.KILOGRAMO,
+        new BigDecimal("3500"), LocalDate.now().minusDays(1));
 
     assertThrows(FechaCosechaInvalidaException.class,
         () -> productoService.publicar(requestFechaPasada, 1L));

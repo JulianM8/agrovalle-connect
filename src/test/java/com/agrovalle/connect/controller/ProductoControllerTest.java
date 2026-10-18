@@ -15,6 +15,7 @@ import com.agrovalle.connect.dto.ProductoPublicacionResponse;
 import com.agrovalle.connect.exception.AgricultorNoEncontradoException;
 import com.agrovalle.connect.exception.FechaCosechaInvalidaException;
 import com.agrovalle.connect.exception.GlobalExceptionHandler;
+import com.agrovalle.connect.model.enums.UnidadMedida;
 import com.agrovalle.connect.service.JwtService;
 import com.agrovalle.connect.service.ProductoService;
 import tools.jackson.databind.ObjectMapper;
@@ -46,14 +47,14 @@ class ProductoControllerTest {
 
         private ProductoPublicacionRequest crearRequestValido() {
                 return new ProductoPublicacionRequest(
-                                "Aguacate", "Frutas", 50, new BigDecimal("3500"), LocalDate.now().plusDays(5));
+                                "Aguacate", "Frutas", 50, UnidadMedida.KILOGRAMO, new BigDecimal("3500"), LocalDate.now().plusDays(5));
         }
 
         @Test
         void debePublicarProductoConTokenValido() throws Exception {
                 when(jwtService.extraerAgricultorId(eq("token-valido"))).thenReturn(1L);
                 ProductoPublicacionResponse respuesta = new ProductoPublicacionResponse(
-                                10L, "Aguacate", "Frutas", 50, new BigDecimal("3500"),
+                                10L, "Aguacate", "Frutas", 50, UnidadMedida.KILOGRAMO, new BigDecimal("3500"),
                                 LocalDate.now().plusDays(5), 1L, "Producto publicado correctamente");
                 when(productoService.publicar(any(ProductoPublicacionRequest.class), eq(1L)))
                                 .thenReturn(respuesta);

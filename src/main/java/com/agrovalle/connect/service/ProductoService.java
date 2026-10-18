@@ -55,6 +55,7 @@ public class ProductoService {
         request.nombre(),
         request.categoria(),
         request.cantidad(),
+        request.unidadMedida(),
         request.precio(),
         request.fechaCosecha(),
         agricultor);
@@ -66,6 +67,7 @@ public class ProductoService {
         guardado.getNombre(),
         guardado.getCategoria(),
         guardado.getCantidad(),
+        guardado.getUnidadMedida(),
         guardado.getPrecio(),
         guardado.getFechaCosecha(),
         guardado.getAgricultor().getId(),

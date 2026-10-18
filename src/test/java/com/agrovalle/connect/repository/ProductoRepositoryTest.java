@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.agrovalle.connect.model.Agricultor;
 import com.agrovalle.connect.model.Producto;
+import com.agrovalle.connect.model.enums.UnidadMedida;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -63,6 +65,7 @@ class ProductoRepositoryTest {
                 nombre,
                 categoria,
                 10,
+                UnidadMedida.KILOGRAMO,
                 new BigDecimal("3500"),
                 LocalDate.now().plusDays(5),
                 agricultor);
