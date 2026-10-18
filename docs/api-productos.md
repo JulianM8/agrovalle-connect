@@ -46,7 +46,8 @@ para peticiones no autenticadas sobre una ruta protegida).
   "nombre": "Aguacate",
   "categoria": "Frutas",
   "cantidad": 50,
-  "precio": 3500,
+  "unidadMedida": "KILOGRAMOS",
+  "precioUnitario": 3500,
   "fechaCosecha": "2026-10-15"
 }
 ```
@@ -74,7 +75,8 @@ la lista queda vacía. Si falta alguno de los parámetros, responde `400 Bad Req
       "nombre": "Aguacate",
       "categoria": "Frutas",
       "cantidad": 50,
-      "precio": 3500,
+      "unidadMedida": "KILOGRAMOS",
+      "precioUnitario": 3500,
       "fechaCosecha": "2026-10-04",
       "agricultorId": 1
     }
