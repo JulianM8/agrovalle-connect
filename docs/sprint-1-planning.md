@@ -35,7 +35,7 @@ Habilitar el registro inicial de agricultores del Valle del Cauca, la publicaci�
 
 | ID Tarea | Descripción técnica | Componente / Tecnología | Atributo ISO 25010 |
 |---|---|---|---|
-| T2.1 | Crear la entidad Producto (nombre, categoría, cantidad, precio, fecha de cosecha) con relación @ManyToOne hacia Agricultor | Spring Data JPA, PostgreSQL | Adecuación funcional |
+| T2.1 | Crear la entidad Producto (nombre, categoría, cantidad, unidad de medida, precio, fecha de cosecha) con relación @ManyToOne hacia Agricultor | Spring Data JPA, PostgreSQL | Adecuación funcional |
 | T2.2 | Implementar ProductoRepository y mapearlo en PostgreSQL | Spring Data JPA | Mantenibilidad |
 | T2.3 | Definir DTOs con validaciones (campos obligatorios, cantidad y precio mayores a 0) | DTOs, Bean Validation | Usabilidad |
 | T2.4 | Implementar ProductoService que valida que la fecha de cosecha no sea anterior a hoy y que el agricultor exista | Spring (@Service) | Adecuación funcional |
