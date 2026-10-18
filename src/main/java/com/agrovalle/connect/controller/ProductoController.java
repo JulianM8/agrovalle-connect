@@ -67,6 +67,7 @@ public class ProductoController {
         producto.getNombre(),
         producto.getCategoria(),
         producto.getCantidad(),
+        producto.getUnidadMedida(),
         producto.getPrecio(),
         producto.getFechaCosecha(),
         producto.getAgricultor().getId());

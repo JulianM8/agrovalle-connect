@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.agrovalle.connect.model.enums.UnidadMedida;
+
 /**
  * Datos que el agricultor envía al publicar un producto.
  */
@@ -14,6 +16,7 @@ public record ProductoPublicacionRequest(
         @NotBlank(message = "La categoría es obligatoria") String categoria,
         @NotNull(message = "La cantidad es obligatoria") 
         @Positive(message = "La cantidad debe ser mayor a 0") Integer cantidad,
+        @NotNull(message = "La unidad de medida es obligatoria") UnidadMedida unidadMedida,
         @NotNull(message = "El precio es obligatorio") 
         @Positive(message = "El precio debe ser mayor a 0") BigDecimal precio,
         @NotNull(message = "La fecha de cosecha es obligatoria") LocalDate fechaCosecha) {
