@@ -2,13 +2,17 @@ package com.agrovalle.connect.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 /**
- * Entidad que representa a un agricultor registrado en la plataforma.
+ * Entidad que representa el perfil de un agricultor registrado en la plataforma.
+ * Sus credenciales viven en la entidad Usuario.
  */
 @Entity
 @Table(name = "agricultores")
@@ -24,33 +28,26 @@ public class Agricultor {
   @Column(nullable = false)
   private String apellido;
 
-  @Column(nullable = false, unique = true, length = 10)
-  private String identificacion;
-
   @Column(nullable = false)
   private String municipio;
 
   @Column(nullable = false)
   private String telefono;
 
-  @Column(nullable = false)
-  private String correo;
-
-  @Column(nullable = false)
-  private String contrasena;
+  @OneToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "usuario_id", nullable = false, unique = true)
+  private Usuario usuario;
 
   public Agricultor() {
   }
 
-  public Agricultor(String nombre, String apellido, String identificacion,
-      String municipio, String telefono, String correo, String contrasena) {
+  public Agricultor(String nombre, String apellido, String municipio,
+      String telefono, Usuario usuario) {
     this.nombre = nombre;
     this.apellido = apellido;
-    this.identificacion = identificacion;
     this.municipio = municipio;
     this.telefono = telefono;
-    this.correo = correo;
-    this.contrasena = contrasena;
+    this.usuario = usuario;
   }
 
   public Long getId() {
@@ -77,14 +74,6 @@ public class Agricultor {
     this.apellido = apellido;
   }
 
-  public String getIdentificacion() {
-    return identificacion;
-  }
-
-  public void setIdentificacion(String identificacion) {
-    this.identificacion = identificacion;
-  }
-
   public String getMunicipio() {
     return municipio;
   }
@@ -101,19 +90,11 @@ public class Agricultor {
     this.telefono = telefono;
   }
 
-  public String getCorreo() {
-    return correo;
+  public Usuario getUsuario() {
+    return usuario;
   }
 
-  public void setCorreo(String correo) {
-    this.correo = correo;
-  }
-
-  public String getContrasena() {
-    return contrasena;
-  }
-
-  public void setContrasena(String contrasena) {
-    this.contrasena = contrasena;
+  public void setUsuario(Usuario usuario) {
+    this.usuario = usuario;
   }
 }
