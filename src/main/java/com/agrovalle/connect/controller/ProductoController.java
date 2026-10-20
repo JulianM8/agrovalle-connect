@@ -31,15 +31,15 @@ public class ProductoController {
   }
 
   /**
-   * Publica un producto, validando que el agricultor exista y que la fecha
-   * de cosecha no sea anterior a hoy.
+   * Publica un producto, validando que exista un perfil de agricultor para
+   * el usuario autenticado y que la fecha de cosecha no sea anterior a hoy.
    */
   @PostMapping
   public ResponseEntity<ProductoPublicacionResponse> publicar(
       @Valid @RequestBody ProductoPublicacionRequest request,
       org.springframework.security.core.Authentication authentication) {
-    Long agricultorId = (Long) authentication.getPrincipal();
-    ProductoPublicacionResponse respuesta = productoService.publicar(request, agricultorId);
+    Long usuarioId = (Long) authentication.getPrincipal();
+    ProductoPublicacionResponse respuesta = productoService.publicar(request, usuarioId);
     return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
   }
 

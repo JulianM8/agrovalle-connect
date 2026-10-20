@@ -40,12 +40,13 @@ public class ProductoService {
   }
 
   /**
-   * Publica un producto, validando que el agricultor exista y que la fecha
-   * de cosecha no sea anterior a hoy.
+   * Publica un producto a nombre del agricultor asociado al usuario
+   * autenticado, validando que exista un perfil de agricultor para ese
+   * usuario y que la fecha de cosecha no sea anterior a hoy.
    */
-  public ProductoPublicacionResponse publicar(ProductoPublicacionRequest request, Long agricultorId) {
-    Agricultor agricultor = agricultorRepository.findById(agricultorId)
-        .orElseThrow(() -> new AgricultorNoEncontradoException(agricultorId));
+  public ProductoPublicacionResponse publicar(ProductoPublicacionRequest request, Long usuarioId) {
+    Agricultor agricultor = agricultorRepository.findByUsuarioId(usuarioId)
+        .orElseThrow(() -> new AgricultorNoEncontradoException(usuarioId));
 
     if (request.fechaCosecha().isBefore(LocalDate.now())) {
       throw new FechaCosechaInvalidaException(request.fechaCosecha());
