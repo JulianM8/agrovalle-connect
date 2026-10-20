@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.agrovalle.connect.model.Agricultor;
 import com.agrovalle.connect.model.Producto;
+import com.agrovalle.connect.model.Usuario;
+import com.agrovalle.connect.model.enums.Rol;
 import com.agrovalle.connect.model.enums.UnidadMedida;
 
 import java.math.BigDecimal;
@@ -17,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 class ProductoRepositoryTest {
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private AgricultorRepository agricultorRepository;
@@ -50,14 +55,17 @@ class ProductoRepositoryTest {
     }
 
     private Agricultor crearAgricultor(String identificacion, String municipio) {
+        Usuario usuario = usuarioRepository.save(new Usuario(
+                identificacion,
+                identificacion + "@correo.com",
+                "contrasena123",
+                Rol.AGRICULTOR));
         return agricultorRepository.save(new Agricultor(
                 "Agricultor",
                 "De Prueba",
-                identificacion,
                 municipio,
                 "3001234567",
-                identificacion + "@correo.com",
-                "contrasena123"));
+                usuario));
     }
 
     private Producto crearProducto(String nombre, String categoria, Agricultor agricultor) {

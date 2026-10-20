@@ -26,6 +26,17 @@ public class GlobalExceptionHandler {
   }
 
   /**
+   * Maneja la excepción CorreoDuplicadoException y devuelve una respuesta
+   * con el estado HTTP 409 (Conflict).
+   */
+  @ExceptionHandler(CorreoDuplicadoException.class)
+  public ResponseEntity<Map<String, String>> manejarCorreoDuplicado(
+      CorreoDuplicadoException ex) {
+    return construirRespuesta(HttpStatus.CONFLICT, ex.getMessage());
+  }
+
+  
+  /**
    * Maneja la excepción AgricultorNoEncontradoException y devuelve una respuesta
    * con el estado HTTP 404 (Not Found).
    */
