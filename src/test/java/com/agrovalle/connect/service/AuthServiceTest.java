@@ -7,8 +7,9 @@ import static org.mockito.Mockito.when;
 import com.agrovalle.connect.dto.LoginRequest;
 import com.agrovalle.connect.dto.LoginResponse;
 import com.agrovalle.connect.exception.CredencialesInvalidasException;
-import com.agrovalle.connect.model.Agricultor;
-import com.agrovalle.connect.repository.AgricultorRepository;
+import com.agrovalle.connect.model.Usuario;
+import com.agrovalle.connect.model.enums.Rol;
+import com.agrovalle.connect.repository.UsuarioRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 class AuthServiceTest {
 
     @Mock
-    private AgricultorRepository agricultorRepository;
+    private UsuarioRepository usuarioRepository;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -32,21 +33,20 @@ class AuthServiceTest {
     @InjectMocks
     private AuthService authService;
 
-    private Agricultor crearAgricultorConHash() {
-        Agricultor agricultor = new Agricultor(
-                "Juan", "Perez", "1111078900", "Palmira", "3001234567",
-                "juan@correo.com", "hash-guardado");
-        agricultor.setId(1L);
-        return agricultor;
+    private Usuario crearUsuarioConHash() {
+        Usuario usuario = new Usuario(
+                "1111078900", "juan@correo.com", "hash-guardado", Rol.AGRICULTOR);
+        usuario.setId(1L);
+        return usuario;
     }
 
     @Test
     void debeLoguearConCredencialesValidas() {
-        Agricultor agricultor = crearAgricultorConHash();
-        when(agricultorRepository.findByIdentificacion("1111078900"))
-                .thenReturn(Optional.of(agricultor));
+        Usuario usuario = crearUsuarioConHash();
+        when(usuarioRepository.findByIdentificacion("1111078900"))
+                .thenReturn(Optional.of(usuario));
         when(passwordEncoder.matches("contrasena123", "hash-guardado")).thenReturn(true);
-        when(jwtService.generarToken(1L)).thenReturn("token-simulado");
+        when(jwtService.generarToken(1L, Rol.AGRICULTOR)).thenReturn("token-simulado");
         when(jwtService.getExpiracionMs()).thenReturn(3600000L);
 
         LoginResponse respuesta = authService.login(
@@ -58,9 +58,9 @@ class AuthServiceTest {
 
     @Test
     void debeRechazarContrasenaIncorrecta() {
-        Agricultor agricultor = crearAgricultorConHash();
-        when(agricultorRepository.findByIdentificacion("1111078900"))
-                .thenReturn(Optional.of(agricultor));
+        Usuario usuario = crearUsuarioConHash();
+        when(usuarioRepository.findByIdentificacion("1111078900"))
+                .thenReturn(Optional.of(usuario));
         when(passwordEncoder.matches("contrasena-incorrecta", "hash-guardado")).thenReturn(false);
 
         assertThrows(CredencialesInvalidasException.class,
@@ -69,10 +69,21 @@ class AuthServiceTest {
 
     @Test
     void debeRechazarIdentificacionInexistente() {
-        when(agricultorRepository.findByIdentificacion("0000000000"))
+        when(usuarioRepository.findByIdentificacion("0000000000"))
                 .thenReturn(Optional.empty());
 
         assertThrows(CredencialesInvalidasException.class,
                 () -> authService.login(new LoginRequest("0000000000", "cualquiera")));
+    }
+
+    @Test
+    void debeRechazarUsuarioInactivo() {
+        Usuario usuario = crearUsuarioConHash();
+        usuario.setActivo(false);
+        when(usuarioRepository.findByIdentificacion("1111078900"))
+                .thenReturn(Optional.of(usuario));
+
+        assertThrows(CredencialesInvalidasException.class,
+                () -> authService.login(new LoginRequest("1111078900", "contrasena123")));
     }
 }

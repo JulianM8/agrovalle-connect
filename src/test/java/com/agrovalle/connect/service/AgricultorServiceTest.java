@@ -12,7 +12,9 @@ import com.agrovalle.connect.dto.AgricultorRegistroRequest;
 import com.agrovalle.connect.dto.AgricultorRegistroResponse;
 import com.agrovalle.connect.exception.IdentificacionDuplicadaException;
 import com.agrovalle.connect.model.Agricultor;
+import com.agrovalle.connect.model.Usuario;
 import com.agrovalle.connect.repository.AgricultorRepository;
+import com.agrovalle.connect.repository.UsuarioRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,6 +29,9 @@ class AgricultorServiceTest {
   private AgricultorRepository agricultorRepository;
 
   @Mock
+  private UsuarioRepository usuarioRepository;
+
+  @Mock
   private PasswordEncoder passwordEncoder;
 
   @InjectMocks
@@ -39,8 +44,13 @@ class AgricultorServiceTest {
 
   @Test
   void debeRegistrarAgricultorConDatosValidos() {
-    when(agricultorRepository.existsByIdentificacion("1111078900")).thenReturn(false);
+    when(usuarioRepository.existsByIdentificacion("1111078900")).thenReturn(false);
     when(passwordEncoder.encode("contrasena123")).thenReturn("hash-simulado");
+    when(usuarioRepository.save(any(Usuario.class))).thenAnswer(invocacion -> {
+      Usuario usuario = invocacion.getArgument(0);
+      usuario.setId(1L);
+      return usuario;
+    });
     when(agricultorRepository.save(any(Agricultor.class))).thenAnswer(invocacion -> {
       Agricultor agricultor = invocacion.getArgument(0);
       agricultor.setId(1L);
@@ -51,34 +61,42 @@ class AgricultorServiceTest {
 
     assertEquals(1L, respuesta.id());
     assertEquals("Juan", respuesta.nombre());
+    assertEquals("1111078900", respuesta.identificacion());
     assertEquals("Registro realizado correctamente", respuesta.mensaje());
     verify(passwordEncoder).encode("contrasena123");
+    verify(usuarioRepository).save(any(Usuario.class));
     verify(agricultorRepository).save(any(Agricultor.class));
   }
 
   @Test
   void debeGuardarLaContrasenaCifradaNoEnTextoPlano() {
-    when(agricultorRepository.existsByIdentificacion(anyString())).thenReturn(false);
+    when(usuarioRepository.existsByIdentificacion(anyString())).thenReturn(false);
     when(passwordEncoder.encode("contrasena123")).thenReturn("hash-simulado");
+    when(usuarioRepository.save(any(Usuario.class))).thenAnswer(invocacion -> {
+      Usuario usuario = invocacion.getArgument(0);
+      assertEquals("hash-simulado", usuario.getContrasena());
+      usuario.setId(1L);
+      return usuario;
+    });
     when(agricultorRepository.save(any(Agricultor.class))).thenAnswer(invocacion -> {
       Agricultor agricultor = invocacion.getArgument(0);
-      assertEquals("hash-simulado", agricultor.getContrasena());
       agricultor.setId(1L);
       return agricultor;
     });
 
     agricultorService.registrar(crearRequest());
 
-    verify(agricultorRepository).save(any(Agricultor.class));
+    verify(usuarioRepository).save(any(Usuario.class));
   }
 
   @Test
   void debeRechazarIdentificacionDuplicada() {
-    when(agricultorRepository.existsByIdentificacion("1111078900")).thenReturn(true);
+    when(usuarioRepository.existsByIdentificacion("1111078900")).thenReturn(true);
 
     assertThrows(IdentificacionDuplicadaException.class,
         () -> agricultorService.registrar(crearRequest()));
 
+    verify(usuarioRepository, never()).save(any(Usuario.class));
     verify(agricultorRepository, never()).save(any(Agricultor.class));
     verify(passwordEncoder, never()).encode(anyString());
   }
