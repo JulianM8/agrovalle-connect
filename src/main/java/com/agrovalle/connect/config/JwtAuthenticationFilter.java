@@ -25,7 +25,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
    * Filtra las solicitudes HTTP para autenticar usuarios (agricultores,
    * compradores o transportistas) mediante JWT. Si el token es válido, se
    * establece la autenticación en el contexto de seguridad con el id del
-   * usuario como principal y su rol como authority (ROLE_&lt;rol&gt;).
+   * usuario como principal y una authority ROLE_&lt;rol&gt; por cada rol
+   * que tenga el usuario (puede tener varios a la vez).
    */
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -36,9 +37,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       String token = header.substring(7);
       try {
         Long usuarioId = jwtService.extraerUsuarioId(token);
-        String rol = jwtService.extraerRol(token);
-        List<GrantedAuthority> authorities = rol != null
-            ? List.of(new SimpleGrantedAuthority("ROLE_" + rol))
+        List<String> roles = jwtService.extraerRoles(token);
+        List<GrantedAuthority> authorities = roles != null
+            ? roles.stream()
+                .<GrantedAuthority>map(rol -> new SimpleGrantedAuthority("ROLE_" + rol))
+                .toList()
             : List.of();
         var authentication = new UsernamePasswordAuthenticationToken(
             usuarioId, null, authorities);

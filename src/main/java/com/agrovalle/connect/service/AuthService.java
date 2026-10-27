@@ -38,7 +38,7 @@ public class AuthService {
       throw new CredencialesInvalidasException();
     }
 
-    String token = jwtService.generarToken(usuario.getId(), usuario.getRol());
+    String token = jwtService.generarToken(usuario.getId(), usuario.getRoles());
     return new LoginResponse(token, "Bearer", jwtService.getExpiracionMs());
   }
 }
