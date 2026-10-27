@@ -1,23 +1,34 @@
-INSERT INTO usuarios (identificacion, correo, contrasena, rol, activo)
+INSERT INTO usuarios (identificacion, correo, contrasena, activo)
 SELECT '9000000001', 'ana.demo@agrovalle.test',
-       '$2b$10$uVngY.K.DpsVR5UMA7PzoudjFBt/yMalATYfyxF7SsmdJ7fyOLC7m', 'AGRICULTOR', true
+       '$2b$10$uVngY.K.DpsVR5UMA7PzoudjFBt/yMalATYfyxF7SsmdJ7fyOLC7m', true
 WHERE NOT EXISTS (
     SELECT 1 FROM usuarios WHERE identificacion = '9000000001'
 );
 
-INSERT INTO usuarios (identificacion, correo, contrasena, rol, activo)
+INSERT INTO usuarios (identificacion, correo, contrasena, activo)
 SELECT '9000000002', 'carlos.demo@agrovalle.test',
-       '$2b$10$uVngY.K.DpsVR5UMA7PzoudjFBt/yMalATYfyxF7SsmdJ7fyOLC7m', 'AGRICULTOR', true
+       '$2b$10$uVngY.K.DpsVR5UMA7PzoudjFBt/yMalATYfyxF7SsmdJ7fyOLC7m', true
 WHERE NOT EXISTS (
     SELECT 1 FROM usuarios WHERE identificacion = '9000000002'
 );
 
-INSERT INTO usuarios (identificacion, correo, contrasena, rol, activo)
+INSERT INTO usuarios (identificacion, correo, contrasena, activo)
 SELECT '9000000003', 'maria.demo@agrovalle.test',
-       '$2b$10$uVngY.K.DpsVR5UMA7PzoudjFBt/yMalATYfyxF7SsmdJ7fyOLC7m', 'AGRICULTOR', true
+       '$2b$10$uVngY.K.DpsVR5UMA7PzoudjFBt/yMalATYfyxF7SsmdJ7fyOLC7m', true
 WHERE NOT EXISTS (
     SELECT 1 FROM usuarios WHERE identificacion = '9000000003'
 );
+
+-- Rol de cada usuario demo (tabla asociativa roles_usuario: un usuario
+-- puede tener varias filas, una por cada rol que ejerce).
+INSERT INTO roles_usuario (usuario_id, rol)
+SELECT usuario.id, 'AGRICULTOR'
+FROM usuarios usuario
+WHERE usuario.identificacion IN ('9000000001', '9000000002', '9000000003')
+  AND NOT EXISTS (
+      SELECT 1 FROM roles_usuario ru
+      WHERE ru.usuario_id = usuario.id AND ru.rol = 'AGRICULTOR'
+  );
 
 -- Perfiles de agricultor, enlazados a su usuario por usuario_id.
 INSERT INTO agricultores (nombre, apellido, municipio, telefono, usuario_id)

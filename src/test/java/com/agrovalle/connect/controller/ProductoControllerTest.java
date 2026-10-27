@@ -21,6 +21,7 @@ import com.agrovalle.connect.service.ProductoService;
 import tools.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -53,7 +54,7 @@ class ProductoControllerTest {
         @Test
         void debePublicarProductoConTokenValido() throws Exception {
                 when(jwtService.extraerUsuarioId(eq("token-valido"))).thenReturn(1L);
-                when(jwtService.extraerRol(eq("token-valido"))).thenReturn("AGRICULTOR");
+                when(jwtService.extraerRoles(eq("token-valido"))).thenReturn(List.of("AGRICULTOR"));
                 ProductoPublicacionResponse respuesta = new ProductoPublicacionResponse(
                                 10L, "Aguacate", "Frutas", 50, UnidadMedida.KILOGRAMO, new BigDecimal("3500"),
                                 LocalDate.now().plusDays(5), 1L, "Producto publicado correctamente");
@@ -91,7 +92,7 @@ class ProductoControllerTest {
         @Test
         void debeRechazarFechaDeCosechaPasada() throws Exception {
                 when(jwtService.extraerUsuarioId(eq("token-valido"))).thenReturn(1L);
-                when(jwtService.extraerRol(eq("token-valido"))).thenReturn("AGRICULTOR");
+                when(jwtService.extraerRoles(eq("token-valido"))).thenReturn(List.of("AGRICULTOR"));
                 when(productoService.publicar(any(ProductoPublicacionRequest.class), anyLong()))
                                 .thenThrow(new FechaCosechaInvalidaException(LocalDate.now().minusDays(1)));
 
@@ -105,7 +106,7 @@ class ProductoControllerTest {
         @Test
         void debeRechazarAgricultorInexistente() throws Exception {
                 when(jwtService.extraerUsuarioId(eq("token-valido"))).thenReturn(99L);
-                when(jwtService.extraerRol(eq("token-valido"))).thenReturn("AGRICULTOR");
+                when(jwtService.extraerRoles(eq("token-valido"))).thenReturn(List.of("AGRICULTOR"));
                 when(productoService.publicar(any(ProductoPublicacionRequest.class), eq(99L)))
                                 .thenThrow(new AgricultorNoEncontradoException(99L));
 
@@ -116,3 +117,4 @@ class ProductoControllerTest {
                                 .andExpect(status().isNotFound());
         }
 }
+

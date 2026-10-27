@@ -3,20 +3,25 @@ package com.agrovalle.connect.service;
 
 import com.agrovalle.connect.dto.AgricultorRegistroRequest;
 import com.agrovalle.connect.dto.AgricultorRegistroResponse;
+import com.agrovalle.connect.exception.CorreoDuplicadoException;
 import com.agrovalle.connect.exception.IdentificacionDuplicadaException;
 import com.agrovalle.connect.model.Agricultor;
 import com.agrovalle.connect.model.Usuario;
 import com.agrovalle.connect.model.enums.Rol;
 import com.agrovalle.connect.repository.AgricultorRepository;
 import com.agrovalle.connect.repository.UsuarioRepository;
+import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Lógica de negocio para el registro de agricultores. Crea primero la
- * cuenta de autenticación compartida (Usuario) y luego el perfil de
- * agricultor enlazado a ella.
+ * Lógica de negocio para el registro de agricultores. Si la identificación
+ * ya existe como Usuario (porque la persona ya tiene cuenta con otro rol,
+ * por ejemplo comprador), reutiliza esa cuenta y le agrega el rol
+ * AGRICULTOR, en vez de crear una cuenta nueva. Si la identificación es
+ * nueva, crea primero la cuenta de autenticación compartida (Usuario) y
+ * luego el perfil de agricultor enlazado a ella.
  */
 @Service
 public class AgricultorService {
@@ -35,29 +40,43 @@ public class AgricultorService {
   }
 
   /**
-   * Registra un nuevo agricultor, validando que su identificación no exista.
-   * Crea la cuenta en Usuario (rol AGRICULTOR) y el perfil en Agricultor
-   * dentro de la misma transacción.
+   * Registra un nuevo agricultor. Si ya existe un Usuario con esa
+   * identificación y aún no tiene el rol AGRICULTOR, reutiliza esa cuenta
+   * (agregándole el rol) en vez de crear una nueva; si ya es agricultor,
+   * rechaza el registro como duplicado. Crea el perfil en Agricultor
+   * enlazado a la cuenta dentro de la misma transacción.
    */
   @Transactional
   public AgricultorRegistroResponse registrar(AgricultorRegistroRequest request) {
-    if (usuarioRepository.existsByIdentificacion(request.identificacion())) {
-      throw new IdentificacionDuplicadaException(request.identificacion());
-    }
+    Optional<Usuario> usuarioExistente =
+        usuarioRepository.findByIdentificacion(request.identificacion());
 
-    Usuario usuario = new Usuario(
-        request.identificacion(),
-        request.correo(),
-        passwordEncoder.encode(request.contrasena()),
-        Rol.AGRICULTOR);
-    Usuario usuarioGuardado = usuarioRepository.save(usuario);
+    Usuario usuario;
+    if (usuarioExistente.isPresent()) {
+      usuario = usuarioExistente.get();
+      if (usuario.tieneRol(Rol.AGRICULTOR)) {
+        throw new IdentificacionDuplicadaException(request.identificacion());
+      }
+      usuario.agregarRol(Rol.AGRICULTOR);
+      usuarioRepository.save(usuario);
+    } else {
+      if (usuarioRepository.existsByCorreo(request.correo())) {
+        throw new CorreoDuplicadoException(request.correo());
+      }
+      Usuario nuevoUsuario = new Usuario(
+          request.identificacion(),
+          request.correo(),
+          passwordEncoder.encode(request.contrasena()),
+          Rol.AGRICULTOR);
+      usuario = usuarioRepository.save(nuevoUsuario);
+    }
 
     Agricultor agricultor = new Agricultor(
         request.nombre(),
         request.apellido(),
         request.municipio(),
         request.telefono(),
-        usuarioGuardado);
+        usuario);
 
     Agricultor guardado = agricultorRepository.save(agricultor);
 
@@ -65,7 +84,7 @@ public class AgricultorService {
         guardado.getId(),
         guardado.getNombre(),
         guardado.getApellido(),
-        usuarioGuardado.getIdentificacion(),
+        usuario.getIdentificacion(),
         guardado.getMunicipio(),
         "Registro realizado correctamente");
   }

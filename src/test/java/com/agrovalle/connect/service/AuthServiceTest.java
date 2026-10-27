@@ -11,6 +11,7 @@ import com.agrovalle.connect.model.Usuario;
 import com.agrovalle.connect.model.enums.Rol;
 import com.agrovalle.connect.repository.UsuarioRepository;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -46,7 +47,7 @@ class AuthServiceTest {
         when(usuarioRepository.findByIdentificacion("1111078900"))
                 .thenReturn(Optional.of(usuario));
         when(passwordEncoder.matches("contrasena123", "hash-guardado")).thenReturn(true);
-        when(jwtService.generarToken(1L, Rol.AGRICULTOR)).thenReturn("token-simulado");
+        when(jwtService.generarToken(1L, Set.of(Rol.AGRICULTOR))).thenReturn("token-simulado");
         when(jwtService.getExpiracionMs()).thenReturn(3600000L);
 
         LoginResponse respuesta = authService.login(
