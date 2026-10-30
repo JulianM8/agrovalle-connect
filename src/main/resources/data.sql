@@ -1,19 +1,19 @@
-INSERT INTO usuarios (identificacion, correo, contrasena, activo)
-SELECT '9000000001', 'ana.demo@agrovalle.test',
+INSERT INTO usuarios (identificacion, nombre, apellido, telefono, correo, contrasena, activo)
+SELECT '9000000001', 'Ana', 'Productora Demo', '3000000001', 'ana.demo@agrovalle.test',
        '$2b$10$uVngY.K.DpsVR5UMA7PzoudjFBt/yMalATYfyxF7SsmdJ7fyOLC7m', true
 WHERE NOT EXISTS (
     SELECT 1 FROM usuarios WHERE identificacion = '9000000001'
 );
 
-INSERT INTO usuarios (identificacion, correo, contrasena, activo)
-SELECT '9000000002', 'carlos.demo@agrovalle.test',
+INSERT INTO usuarios (identificacion, nombre, apellido, telefono, correo, contrasena, activo)
+SELECT '9000000002', 'Carlos', 'Productor Demo', '3000000002', 'carlos.demo@agrovalle.test',
        '$2b$10$uVngY.K.DpsVR5UMA7PzoudjFBt/yMalATYfyxF7SsmdJ7fyOLC7m', true
 WHERE NOT EXISTS (
     SELECT 1 FROM usuarios WHERE identificacion = '9000000002'
 );
 
-INSERT INTO usuarios (identificacion, correo, contrasena, activo)
-SELECT '9000000003', 'maria.demo@agrovalle.test',
+INSERT INTO usuarios (identificacion, nombre, apellido, telefono, correo, contrasena, activo)
+SELECT '9000000003', 'Maria', 'Productora Demo', '3000000003', 'maria.demo@agrovalle.test',
        '$2b$10$uVngY.K.DpsVR5UMA7PzoudjFBt/yMalATYfyxF7SsmdJ7fyOLC7m', true
 WHERE NOT EXISTS (
     SELECT 1 FROM usuarios WHERE identificacion = '9000000003'
@@ -30,25 +30,25 @@ WHERE usuario.identificacion IN ('9000000001', '9000000002', '9000000003')
       WHERE ru.usuario_id = usuario.id AND ru.rol = 'AGRICULTOR'
   );
 
--- Perfiles de agricultor, enlazados a su usuario por usuario_id.
-INSERT INTO agricultores (nombre, apellido, municipio, telefono, usuario_id)
-SELECT 'Ana', 'Productora Demo', 'Palmira', '3000000001', usuario.id
+-- Perfiles de agricultor (solo datos propios del rol), enlazados a su usuario por usuario_id.
+INSERT INTO agricultores (municipio, usuario_id)
+SELECT 'Palmira', usuario.id
 FROM usuarios usuario
 WHERE usuario.identificacion = '9000000001'
   AND NOT EXISTS (
       SELECT 1 FROM agricultores a WHERE a.usuario_id = usuario.id
   );
 
-INSERT INTO agricultores (nombre, apellido, municipio, telefono, usuario_id)
-SELECT 'Carlos', 'Productor Demo', 'Cali', '3000000002', usuario.id
+INSERT INTO agricultores (municipio, usuario_id)
+SELECT 'Cali', usuario.id
 FROM usuarios usuario
 WHERE usuario.identificacion = '9000000002'
   AND NOT EXISTS (
       SELECT 1 FROM agricultores a WHERE a.usuario_id = usuario.id
   );
 
-INSERT INTO agricultores (nombre, apellido, municipio, telefono, usuario_id)
-SELECT 'Maria', 'Productora Demo', 'Tuluá', '3000000003', usuario.id
+INSERT INTO agricultores (municipio, usuario_id)
+SELECT 'Tuluá', usuario.id
 FROM usuarios usuario
 WHERE usuario.identificacion = '9000000003'
   AND NOT EXISTS (

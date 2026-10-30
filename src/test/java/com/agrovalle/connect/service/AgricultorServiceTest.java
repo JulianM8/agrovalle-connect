@@ -46,6 +46,7 @@ class AgricultorServiceTest {
         "Juan", "Perez", "1111078900", "Palmira", "3001234567", "juan@correo.com", "contrasena123");
   }
 
+  
   @Test
   void debeRegistrarAgricultorConDatosValidos() {
     when(usuarioRepository.findByIdentificacion("1111078900")).thenReturn(Optional.empty());
@@ -53,6 +54,9 @@ class AgricultorServiceTest {
     when(passwordEncoder.encode("contrasena123")).thenReturn("hash-simulado");
     when(usuarioRepository.save(any(Usuario.class))).thenAnswer(invocacion -> {
       Usuario usuario = invocacion.getArgument(0);
+      assertEquals("Juan", usuario.getNombre());
+      assertEquals("Perez", usuario.getApellido());
+      assertEquals("3001234567", usuario.getTelefono());
       usuario.setId(1L);
       return usuario;
     });
@@ -66,6 +70,7 @@ class AgricultorServiceTest {
 
     assertEquals(1L, respuesta.id());
     assertEquals("Juan", respuesta.nombre());
+    assertEquals("Perez", respuesta.apellido());
     assertEquals("1111078900", respuesta.identificacion());
     assertEquals("Registro realizado correctamente", respuesta.mensaje());
     verify(passwordEncoder).encode("contrasena123");
@@ -98,7 +103,7 @@ class AgricultorServiceTest {
   @Test
   void debeRechazarIdentificacionDuplicada() {
     Usuario usuarioExistente = new Usuario(
-        "1111078900", "otro@correo.com", "hash-existente", Rol.AGRICULTOR);
+        "1111078900", "Otro", "Nombre", "3009999999", "otro@correo.com", "hash-existente", Rol.AGRICULTOR);
     usuarioExistente.setId(5L);
     when(usuarioRepository.findByIdentificacion("1111078900"))
         .thenReturn(Optional.of(usuarioExistente));
@@ -126,7 +131,7 @@ class AgricultorServiceTest {
   @Test
   void debeReutilizarUsuarioExistenteYAgregarRolAgricultorSiNoLoTenia() {
     Usuario usuarioComprador = new Usuario(
-        "1111078900", "juan@correo.com", "hash-existente", Rol.COMPRADOR);
+        "1111078900", "Juan", "Perez", "3001234567", "juan@correo.com", "hash-existente", Rol.COMPRADOR);
     usuarioComprador.setId(5L);
     when(usuarioRepository.findByIdentificacion("1111078900"))
         .thenReturn(Optional.of(usuarioComprador));

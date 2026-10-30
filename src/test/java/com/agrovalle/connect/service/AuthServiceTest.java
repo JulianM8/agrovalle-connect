@@ -36,7 +36,7 @@ class AuthServiceTest {
 
     private Usuario crearUsuarioConHash() {
         Usuario usuario = new Usuario(
-                "1111078900", "juan@correo.com", "hash-guardado", Rol.AGRICULTOR);
+               "1111078900", "Juan", "Perez", "3001234567", "juan@correo.com", "hash-guardado", Rol.AGRICULTOR);
         usuario.setId(1L);
         return usuario;
     }

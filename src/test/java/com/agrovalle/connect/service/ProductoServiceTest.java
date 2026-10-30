@@ -40,9 +40,9 @@ class ProductoServiceTest {
   private ProductoService productoService;
 
   private Agricultor crearAgricultor() {
-    Usuario usuario = new Usuario("1111078900", "juan@correo.com", "hash", Rol.AGRICULTOR);
+    Usuario usuario = new Usuario("1111078900", "Juan", "Perez", "3001234567", "juan@correo.com", "hash", Rol.AGRICULTOR);
     usuario.setId(1L);
-    Agricultor agricultor = new Agricultor("Juan", "Perez", "Palmira", "3001234567", usuario);
+    Agricultor agricultor = new Agricultor("Palmira",usuario);
     agricultor.setId(1L);
     return agricultor;
   }

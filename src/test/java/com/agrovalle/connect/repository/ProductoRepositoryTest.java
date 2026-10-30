@@ -57,14 +57,14 @@ class ProductoRepositoryTest {
     private Agricultor crearAgricultor(String identificacion, String municipio) {
         Usuario usuario = usuarioRepository.save(new Usuario(
                 identificacion,
+                "Agricultor",
+                "De Prueba",
+                "3001234567",
                 identificacion + "@correo.com",
                 "contrasena123",
                 Rol.AGRICULTOR));
         return agricultorRepository.save(new Agricultor(
-                "Agricultor",
-                "De Prueba",
                 municipio,
-                "3001234567",
                 usuario));
     }
 
