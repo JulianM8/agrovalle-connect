@@ -91,7 +91,7 @@ patrón ya queda listo para que `Comprador` y `Transportista` lo sigan tal
 cual cuando se implementen, sin más cambios en `AuthService` ni
 `JwtService`.
 
-# Cambio: nombre, apellido y teléfono pasan a `usuarios`
+# Cambio: nombre, apellido y teléfono pasan a la entidad `usuarios`
 
 ## Motivo
 Los datos personales (nombre, apellido, teléfono) estaban en la tabla `agricultores`. Como un mismo usuario puede tener varios roles (agricultor, comprador, transportista), esos datos se repetirían en cada perfil. Al centralizarlos en `usuarios`, se guardan una sola vez y los perfiles por rol conservan únicamente sus datos propios.
