@@ -65,25 +65,23 @@ public class AgricultorService {
       }
       Usuario nuevoUsuario = new Usuario(
           request.identificacion(),
+          request.nombre(),
+          request.apellido(),
+          request.telefono(),
           request.correo(),
           passwordEncoder.encode(request.contrasena()),
           Rol.AGRICULTOR);
       usuario = usuarioRepository.save(nuevoUsuario);
     }
 
-    Agricultor agricultor = new Agricultor(
-        request.nombre(),
-        request.apellido(),
-        request.municipio(),
-        request.telefono(),
-        usuario);
+    Agricultor agricultor = new Agricultor(request.municipio(), usuario);
 
     Agricultor guardado = agricultorRepository.save(agricultor);
 
     return new AgricultorRegistroResponse(
         guardado.getId(),
-        guardado.getNombre(),
-        guardado.getApellido(),
+        usuario.getNombre(),
+        usuario.getApellido(),
         usuario.getIdentificacion(),
         guardado.getMunicipio(),
         "Registro realizado correctamente");
