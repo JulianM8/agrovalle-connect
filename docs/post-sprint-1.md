@@ -90,3 +90,30 @@ identificación existente reutiliza la cuenta en vez de duplicarla. El
 patrón ya queda listo para que `Comprador` y `Transportista` lo sigan tal
 cual cuando se implementen, sin más cambios en `AuthService` ni
 `JwtService`.
+
+# Cambio: nombre, apellido y teléfono pasan a `usuarios`
+
+## Motivo
+Los datos personales (nombre, apellido, teléfono) estaban en la tabla `agricultores`. Como un mismo usuario puede tener varios roles (agricultor, comprador, transportista), esos datos se repetirían en cada perfil. Al centralizarlos en `usuarios`, se guardan una sola vez y los perfiles por rol conservan únicamente sus datos propios.
+
+## Modelo de datos
+
+| Tabla | Antes | Después |
+|---|---|---|
+| `usuarios` | id, identificacion, correo, contrasena, activo | id, identificacion, **nombre, apellido, telefono**, correo, contrasena, activo |
+| `agricultores` | id, nombre, apellido, municipio, telefono, usuario_id | id, municipio, usuario_id |
+
+## Cambios en el código
+
+- **`Usuario`**: se agregan los atributos `nombre`, `apellido` y `telefono` (obligatorios) con sus getters y setters. El constructor ahora es `Usuario(identificacion, nombre, apellido, telefono, correo, contrasena, rolInicial)`.
+- **`Agricultor`**: se eliminan `nombre`, `apellido` y `telefono`. El constructor ahora es `Agricultor(municipio, usuario)`. Para obtener esos datos se usa `agricultor.getUsuario()`.
+- **`AgricultorService.registrar`**:
+  - Si la identificación es nueva, el `Usuario` se crea con nombre, apellido y teléfono del request.
+  - Si el usuario ya existía (por ejemplo, ya era comprador), se reutiliza y **se conservan sus datos personales ya registrados**; los del request se ignoran para esos tres campos.
+  - La respuesta toma nombre y apellido desde el `Usuario`.
+- **`data.sql`**: los usuarios demo se insertan con nombre, apellido y teléfono; los agricultores demo solo con `municipio` y `usuario_id`.
+- **Sin cambios** (la API no cambia): `AgricultorRegistroRequest`, `AgricultorRegistroResponse`, `AgricultorController`, `AuthService`, `ProductoService`, `ProductoController` y los DTO de producto.
+
+## Pruebas actualizadas
+`ProductoRepositoryTest`, `ProductoServiceTest`, `AuthServiceTest` y `AgricultorServiceTest` se ajustaron a los nuevos constructores. En `AgricultorServiceTest` se agregaron verificaciones de que nombre, apellido y teléfono se guardan en el `Usuario`.
+
