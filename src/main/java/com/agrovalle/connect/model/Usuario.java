@@ -32,6 +32,15 @@ public class Usuario {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(nullable = false)
+  private String nombre;
+
+  @Column(nullable = false)
+  private String apellido;
+
+  @Column(nullable = false)
+  private String telefono;
+
   @Column(nullable = false, unique = true, length = 20)
   private String identificacion;
 
@@ -42,10 +51,9 @@ public class Usuario {
   private String contrasena;
 
   @ElementCollection(fetch = FetchType.EAGER)
-  @CollectionTable(
-      name = "roles_usuario",
-      joinColumns = @JoinColumn(name = "usuario_id"),
-      uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "rol"}))
+  @CollectionTable(name = "roles_usuario", joinColumns = @JoinColumn(name = "usuario_id"), 
+  uniqueConstraints = @UniqueConstraint(columnNames = {
+      "usuario_id", "rol" }))
   @Enumerated(EnumType.STRING)
   @Column(name = "rol", nullable = false, length = 20)
   private Set<Rol> roles = new HashSet<>();
@@ -56,8 +64,12 @@ public class Usuario {
   public Usuario() {
   }
 
-  public Usuario(String identificacion, String correo, String contrasena, Rol rolInicial) {
+  public Usuario(String identificacion, String nombre, String apellido, String telefono,
+      String correo, String contrasena, Rol rolInicial) {
     this.identificacion = identificacion;
+    this.nombre = nombre;
+    this.apellido = apellido;
+    this.telefono = telefono;
     this.correo = correo;
     this.contrasena = contrasena;
     this.roles = new HashSet<>();
@@ -79,6 +91,30 @@ public class Usuario {
 
   public void setIdentificacion(String identificacion) {
     this.identificacion = identificacion;
+  }
+
+  public String getNombre() {
+    return nombre;
+  }
+
+  public void setNombre(String nombre) {
+    this.nombre = nombre;
+  }
+
+  public String getApellido() {
+    return apellido;
+  }
+
+  public void setApellido(String apellido) {
+    this.apellido = apellido;
+  }
+
+  public String getTelefono() {
+    return telefono;
+  }
+
+  public void setTelefono(String telefono) {
+    this.telefono = telefono;
   }
 
   public String getCorreo() {
@@ -111,7 +147,7 @@ public class Usuario {
   public boolean tieneRol(Rol rol) {
     return roles.contains(rol);
   }
-  
+
   public void agregarRol(Rol rol) {
     if (roles == null) {
       roles = new HashSet<>();
