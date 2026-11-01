@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +36,7 @@ public class ProductoController {
    * el usuario autenticado y que la fecha de cosecha no sea anterior a hoy.
    */
   @PostMapping
+  @PreAuthorize("hasRole('AGRICULTOR')")
   public ResponseEntity<ProductoPublicacionResponse> publicar(
       @Valid @RequestBody ProductoPublicacionRequest request,
       org.springframework.security.core.Authentication authentication) {

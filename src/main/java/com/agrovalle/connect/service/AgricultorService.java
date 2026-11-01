@@ -4,6 +4,7 @@ package com.agrovalle.connect.service;
 import com.agrovalle.connect.dto.AgricultorRegistroRequest;
 import com.agrovalle.connect.dto.AgricultorRegistroResponse;
 import com.agrovalle.connect.exception.CorreoDuplicadoException;
+import com.agrovalle.connect.exception.CredencialesInvalidasException;
 import com.agrovalle.connect.exception.IdentificacionDuplicadaException;
 import com.agrovalle.connect.model.Agricultor;
 import com.agrovalle.connect.model.Usuario;
@@ -48,12 +49,14 @@ public class AgricultorService {
    */
   @Transactional
   public AgricultorRegistroResponse registrar(AgricultorRegistroRequest request) {
-    Optional<Usuario> usuarioExistente =
-        usuarioRepository.findByIdentificacion(request.identificacion());
+    Optional<Usuario> usuarioExistente = usuarioRepository.findByIdentificacion(request.identificacion());
 
     Usuario usuario;
     if (usuarioExistente.isPresent()) {
       usuario = usuarioExistente.get();
+      if (!passwordEncoder.matches(request.contrasena(), usuario.getContrasena())) {
+        throw new CredencialesInvalidasException();
+      }
       if (usuario.tieneRol(Rol.AGRICULTOR)) {
         throw new IdentificacionDuplicadaException(request.identificacion());
       }
