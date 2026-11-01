@@ -48,7 +48,8 @@ class ProductoControllerTest {
 
         private ProductoPublicacionRequest crearRequestValido() {
                 return new ProductoPublicacionRequest(
-                                "Aguacate", "Frutas", 50, UnidadMedida.KILOGRAMO, new BigDecimal("3500"), LocalDate.now().plusDays(5));
+                                "Aguacate", "Frutas", 50, UnidadMedida.KILOGRAMO, new BigDecimal("3500"),
+                                LocalDate.now().plusDays(5));
         }
 
         @Test
@@ -116,5 +117,16 @@ class ProductoControllerTest {
                                 .content(objectMapper.writeValueAsString(crearRequestValido())))
                                 .andExpect(status().isNotFound());
         }
-}
 
+        @Test
+        void debeRechazarUsuarioSinRolAgricultor() throws Exception {
+                when(jwtService.extraerUsuarioId(eq("token-comprador"))).thenReturn(2L);
+                when(jwtService.extraerRoles(eq("token-comprador"))).thenReturn(List.of("COMPRADOR"));
+
+                mockMvc.perform(post("/api/v1/productos")
+                                .header("Authorization", "Bearer token-comprador")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(crearRequestValido())))
+                                .andExpect(status().isForbidden());
+        }
+}
