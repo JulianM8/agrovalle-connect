@@ -5,11 +5,15 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Respuesta con el pedido creado y su total calculado.
+ */
 public record PedidoResponse(
     Long id,
     EstadoPedido estado,
-    Long agricultorId,
-    BigDecimal total,
+    String direccionEntrega,
     LocalDateTime fechaCreacion,
-    List<DetallePedidoResponse> items) {
+    Long agricultorId,
+    List<DetallePedidoResponse> detalles,
+    BigDecimal total) {
 }
