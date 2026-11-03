@@ -6,7 +6,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import com.agrovalle.connect.dto.CancelacionResponse;
+import com.agrovalle.connect.repository.AgricultorRepository;
 import com.agrovalle.connect.dto.DetallePedidoRequest;
 import com.agrovalle.connect.dto.PedidoRequest;
 import com.agrovalle.connect.dto.PedidoResponse;
@@ -33,9 +37,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 @ExtendWith(MockitoExtension.class)
 class PedidoServiceTest {
+
+  @Mock
+  private AgricultorRepository agricultorRepository;
+
+  @Mock
+  private PagoService pagoService;
 
   @Mock
   private PedidoRepository pedidoRepository;
@@ -135,5 +147,75 @@ class PedidoServiceTest {
 
     assertThrows(RecursoNoEncontradoException.class,
         () -> pedidoService.crear(carrito(new DetallePedidoRequest(1L, 1)), 5L));
+  }
+
+  private Pedido pedidoEn(EstadoPedido estado) {
+    Pedido pedido = new Pedido(comprador, agricultor, "Calle 5 # 10-20");
+    pedido.setId(100L);
+    pedido.setEstado(estado);
+    when(pedidoRepository.findById(100L)).thenReturn(Optional.of(pedido));
+    return pedido;
+  }
+
+  @ParameterizedTest
+  @EnumSource(value = EstadoPedido.class, names = { "PENDIENTE", "CONFIRMADO" })
+  void debeCancelarPedidoPendienteOConfirmado(EstadoPedido estado) {
+    Pedido pedido = pedidoEn(estado);
+    when(pagoService.reembolsar(100L)).thenReturn(true);
+
+    CancelacionResponse respuesta = pedidoService.cancelar(100L, " Ya no lo necesito ", 5L);
+
+    assertEquals(EstadoPedido.CANCELADO, pedido.getEstado());
+    assertEquals("Ya no lo necesito", pedido.getMotivoCancelacion());
+    assertEquals(EstadoPedido.CANCELADO, respuesta.estado());
+    assertTrue(respuesta.reembolsado());
+    verify(pedidoRepository).save(pedido);
+  }
+
+  @ParameterizedTest
+  @EnumSource(value = EstadoPedido.class, names = { "EN_TRANSPORTE", "ENTREGADO", "CANCELADO" })
+  void debeRechazarCancelacionDePedidoDespachadoOYaCancelado(EstadoPedido estado) {
+    Pedido pedido = pedidoEn(estado);
+
+    assertThrows(PedidoInvalidoException.class,
+        () -> pedidoService.cancelar(100L, "Motivo", 5L));
+    assertEquals(estado, pedido.getEstado());
+    verify(pedidoRepository, never()).save(any(Pedido.class));
+    verify(pagoService, never()).reembolsar(100L);
+  }
+
+  @Test
+  void debeCancelarSinReembolsoCuandoNoHayPagoCompletado() {
+    pedidoEn(EstadoPedido.PENDIENTE);
+    when(pagoService.reembolsar(100L)).thenReturn(false);
+
+    CancelacionResponse respuesta = pedidoService.cancelar(100L, "Motivo", 5L);
+
+    assertFalse(respuesta.reembolsado());
+  }
+
+  @Test
+  void noDebeCancelarPedidoDeOtroComprador() {
+    pedidoEn(EstadoPedido.PENDIENTE);
+
+    assertThrows(RecursoNoEncontradoException.class,
+        () -> pedidoService.cancelar(100L, "Motivo", 99L));
+    verify(pedidoRepository, never()).save(any(Pedido.class));
+  }
+
+  @Test
+  void debeMostrarAlAgricultorElMotivoDeCancelacion() {
+    Pedido pedido = new Pedido(comprador, agricultor, "Calle 5 # 10-20");
+    pedido.setEstado(EstadoPedido.CANCELADO);
+    pedido.setMotivoCancelacion("Ya no lo necesito");
+    when(agricultorRepository.findByUsuarioId(7L)).thenReturn(Optional.of(agricultor));
+    when(pedidoRepository.findByAgricultorIdOrderByFechaCreacionDesc(10L))
+        .thenReturn(List.of(pedido));
+
+    var lista = pedidoService.listarDelAgricultor(7L);
+
+    assertEquals(1, lista.size());
+    assertEquals(EstadoPedido.CANCELADO, lista.get(0).estado());
+    assertEquals("Ya no lo necesito", lista.get(0).motivoCancelacion());
   }
 }
