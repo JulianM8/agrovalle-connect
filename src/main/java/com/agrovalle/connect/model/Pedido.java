@@ -43,7 +43,7 @@ public class Pedido {
   @Column(name = "fecha_entrega")
   private LocalDateTime fechaEntrega;
 
-  @Column(name = "motivo_cancelacion")
+  @Column(name = "motivo_cancelacion", length = 500)
   private String motivoCancelacion;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
