@@ -1,5 +1,10 @@
 package com.agrovalle.connect.service;
 
+import com.agrovalle.connect.dto.CancelacionResponse;
+import com.agrovalle.connect.dto.PedidoAgricultorResponse;
+import com.agrovalle.connect.model.enums.EstadoPedido;
+import com.agrovalle.connect.repository.AgricultorRepository;
+import org.springframework.context.annotation.Lazy;
 import com.agrovalle.connect.dto.DetallePedidoResponse;
 import com.agrovalle.connect.dto.DetallePedidoRequest;
 import com.agrovalle.connect.dto.PedidoRequest;
@@ -41,13 +46,23 @@ public class PedidoService {
 
   private final CompradorRepository compradorRepository;
 
+  private final AgricultorRepository agricultorRepository;
+
+  private final PagoService pagoService;
+
+  /**
+   * PagoService va con @Lazy porque a su vez depende de PedidoService.
+   */
   public PedidoService(PedidoRepository pedidoRepository,
       DetallePedidoRepository detallePedidoRepository, ProductoRepository productoRepository,
-      CompradorRepository compradorRepository) {
+      CompradorRepository compradorRepository, AgricultorRepository agricultorRepository,
+      @Lazy PagoService pagoService) {
     this.pedidoRepository = pedidoRepository;
     this.detallePedidoRepository = detallePedidoRepository;
     this.productoRepository = productoRepository;
     this.compradorRepository = compradorRepository;
+    this.agricultorRepository = agricultorRepository;
+    this.pagoService = pagoService;
   }
 
   /**
@@ -121,6 +136,50 @@ public class PedidoService {
       throw new RecursoNoEncontradoException("No existe el pedido con id " + pedidoId);
     }
     return pedido;
+  }
+
+  /**
+   * Cancela un pedido del comprador autenticado. Solo se puede cancelar en
+   * estado PENDIENTE o CONFIRMADO (aún no despachado). Guarda el motivo y
+   * reembolsa el pago si ya estaba completado.
+   */
+  @Transactional
+  public CancelacionResponse cancelar(Long pedidoId, String motivo, Long usuarioId) {
+    Pedido pedido = obtenerPedidoDelComprador(pedidoId, usuarioId);
+    if (pedido.getEstado() != EstadoPedido.PENDIENTE
+        && pedido.getEstado() != EstadoPedido.CONFIRMADO) {
+      throw new PedidoInvalidoException(
+          "El pedido no se puede cancelar en estado " + pedido.getEstado());
+    }
+
+    pedido.setEstado(EstadoPedido.CANCELADO);
+    pedido.setMotivoCancelacion(motivo.trim());
+    pedidoRepository.save(pedido);
+
+    boolean reembolsado = pagoService.reembolsar(pedidoId);
+    String mensaje = reembolsado
+        ? "Pedido cancelado, el pago fue reembolsado"
+        : "Pedido cancelado, no había pagos que reembolsar";
+    return new CancelacionResponse(
+        pedido.getId(), pedido.getEstado(), pedido.getMotivoCancelacion(),
+        reembolsado, mensaje);
+  }
+
+  /**
+   * Lista los pedidos del agricultor autenticado, incluyendo el estado y el
+   * motivo de cancelación para que vea los pedidos cancelados.
+   */
+  @Transactional(readOnly = true)
+  public List<PedidoAgricultorResponse> listarDelAgricultor(Long usuarioId) {
+    Agricultor agricultor = agricultorRepository.findByUsuarioId(usuarioId)
+        .orElseThrow(() -> new RecursoNoEncontradoException(
+            "El usuario autenticado no tiene perfil de agricultor"));
+    return pedidoRepository.findByAgricultorIdOrderByFechaCreacionDesc(agricultor.getId())
+        .stream()
+        .map(p -> new PedidoAgricultorResponse(
+            p.getId(), p.getEstado(), p.getDireccionEntrega(),
+            p.getFechaCreacion(), p.getMotivoCancelacion()))
+        .toList();
   }
 
   private BigDecimal total(List<DetallePedido> detalles) {

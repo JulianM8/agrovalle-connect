@@ -6,6 +6,10 @@ import com.agrovalle.connect.dto.PedidoRequest;
 import com.agrovalle.connect.dto.PedidoResponse;
 import com.agrovalle.connect.service.PagoService;
 import com.agrovalle.connect.service.PedidoService;
+import com.agrovalle.connect.dto.CancelacionRequest;
+import com.agrovalle.connect.dto.CancelacionResponse;
+import com.agrovalle.connect.dto.PedidoAgricultorResponse;
+import java.util.List;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,5 +71,27 @@ public class PedidoController {
       Authentication authentication) {
     Long usuarioId = (Long) authentication.getPrincipal();
     return ResponseEntity.ok(pagoService.consultar(id, usuarioId));
+  }
+    /**
+   * Cancela un pedido del comprador autenticado (200, 400 si no es cancelable, 404).
+   */
+  
+  @PostMapping("/{id}/cancelacion")
+  @PreAuthorize("hasRole('COMPRADOR')")
+  public ResponseEntity<CancelacionResponse> cancelar(@PathVariable("id") Long id,
+      @Valid @RequestBody CancelacionRequest request, Authentication authentication) {
+    Long usuarioId = (Long) authentication.getPrincipal();
+    return ResponseEntity.ok(pedidoService.cancelar(id, request.motivo(), usuarioId));
+  }
+
+  /**
+   * Lista los pedidos del agricultor autenticado, con estado y motivo de cancelación.
+   */
+  @GetMapping
+  @PreAuthorize("hasRole('AGRICULTOR')")
+  public ResponseEntity<List<PedidoAgricultorResponse>> listarDelAgricultor(
+      Authentication authentication) {
+    Long usuarioId = (Long) authentication.getPrincipal();
+    return ResponseEntity.ok(pedidoService.listarDelAgricultor(usuarioId));
   }
 }
