@@ -35,7 +35,6 @@ public class GlobalExceptionHandler {
     return construirRespuesta(HttpStatus.CONFLICT, ex.getMessage());
   }
 
-  
   /**
    * Maneja la excepción AgricultorNoEncontradoException y devuelve una respuesta
    * con el estado HTTP 404 (Not Found).
@@ -96,6 +95,24 @@ public class GlobalExceptionHandler {
   public ResponseEntity<Map<String, String>> manejarCredencialesInvalidas(
       CredencialesInvalidasException ex) {
     return construirRespuesta(HttpStatus.UNAUTHORIZED, ex.getMessage());
+  }
+
+  /**
+   * Maneja PedidoInvalidoException y responde 400 (Bad Request).
+   */
+  @ExceptionHandler(PedidoInvalidoException.class)
+  public ResponseEntity<Map<String, String>> manejarPedidoInvalido(
+      PedidoInvalidoException ex) {
+    return construirRespuesta(HttpStatus.BAD_REQUEST, ex.getMessage());
+  }
+
+  /**
+   * Maneja RecursoNoEncontradoException y responde 404 (Not Found).
+   */
+  @ExceptionHandler(RecursoNoEncontradoException.class)
+  public ResponseEntity<Map<String, String>> manejarRecursoNoEncontrado(
+      RecursoNoEncontradoException ex) {
+    return construirRespuesta(HttpStatus.NOT_FOUND, ex.getMessage());
   }
 
   /**
