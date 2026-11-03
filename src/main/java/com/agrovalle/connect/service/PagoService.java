@@ -15,12 +15,14 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Contexto del patrón Strategy: delega el procesamiento en la estrategia del
- * medio de pago pedido, registra el Pago y, si queda COMPLETADO, confirma el pedido.
+ * medio de pago pedido, registra el Pago y, si queda COMPLETADO, confirma el
+ * pedido.
  */
 @Service
 public class PagoService {
@@ -85,6 +87,21 @@ public class PagoService {
     return aRespuesta(pago);
   }
 
+  /**
+   * Devuelve el dinero de un pedido cancelado: los pagos COMPLETADO pasan a
+   * REEMBOLSADO. Si solo hay pagos PENDIENTE o RECHAZADO no hay nada que
+   * devolver.
+   *
+   * @return true si se reembolsó al menos un pago
+   */
+  @Transactional
+  public boolean reembolsar(Long pedidoId) {
+    List<Pago> completados = pagoRepository.findByPedidoIdAndEstado(pedidoId, EstadoPago.COMPLETADO);
+    completados.forEach(pago -> pago.setEstado(EstadoPago.REEMBOLSADO));
+    pagoRepository.saveAll(completados);
+    return !completados.isEmpty();
+  }
+
   private PagoResponse aRespuesta(Pago pago) {
     String mensaje = switch (pago.getEstado()) {
       case COMPLETADO -> "Pago completado, pedido confirmado";
@@ -92,6 +109,7 @@ public class PagoService {
       case PENDIENTE -> "Pago pendiente, se cobrará contra entrega";
       case REEMBOLSADO -> "Pago reembolsado";
     };
+
     return new PagoResponse(
         pago.getId(),
         pago.getPedido().getId(),
