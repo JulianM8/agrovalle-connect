@@ -11,6 +11,7 @@ import com.agrovalle.connect.repository.CompradorRepository;
 import com.agrovalle.connect.repository.ContactoRepository;
 import com.agrovalle.connect.repository.ProductoRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,6 +74,16 @@ public class ContactoService {
     contacto.setRespuesta(respuesta);
     contacto.setFechaRespuesta(LocalDateTime.now());
     return aRespuesta(contactoRepository.save(contacto));
+  }
+
+  /**
+   * Lista las solicitudes de los productos del agricultor autenticado.
+   */
+  @Transactional(readOnly = true)
+  public List<ContactoResponse> listar(Long usuarioId, boolean pendientes) {
+    return contactoRepository.listarDelAgricultor(usuarioId, pendientes).stream()
+        .map(this::aRespuesta)
+        .toList();
   }
 
   private ContactoResponse aRespuesta(Contacto contacto) {
