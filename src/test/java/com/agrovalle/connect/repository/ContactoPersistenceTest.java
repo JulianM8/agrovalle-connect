@@ -1,9 +1,14 @@
-package com.agrovalle.connect.model;
+package com.agrovalle.connect.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import com.agrovalle.connect.model.Agricultor;
+import com.agrovalle.connect.model.Comprador;
+import com.agrovalle.connect.model.Contacto;
+import com.agrovalle.connect.model.Producto;
+import com.agrovalle.connect.model.Usuario;
 import com.agrovalle.connect.model.enums.Rol;
 import com.agrovalle.connect.model.enums.UnidadMedida;
 import jakarta.persistence.EntityManager;
@@ -18,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-class ContactoTest {
+class ContactoPersistenceTest {
 
   @Autowired
   private EntityManager entityManager;
@@ -61,5 +66,4 @@ class ContactoTest {
     assertNull(fila.get("FECHA_RESPUESTA"));
     assertEquals(agricultor.getId(), contacto.getProducto().getAgricultor().getId());
   }
-
 }
