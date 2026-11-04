@@ -2,6 +2,7 @@ package com.agrovalle.connect.service;
 
 import com.agrovalle.connect.dto.ContactoRequest;
 import com.agrovalle.connect.dto.ContactoResponse;
+import com.agrovalle.connect.event.ContactoRegistradoEvent;
 import com.agrovalle.connect.exception.RecursoNoEncontradoException;
 import com.agrovalle.connect.model.Comprador;
 import com.agrovalle.connect.model.Contacto;
@@ -10,6 +11,7 @@ import com.agrovalle.connect.repository.CompradorRepository;
 import com.agrovalle.connect.repository.ContactoRepository;
 import com.agrovalle.connect.repository.ProductoRepository;
 import java.time.LocalDateTime;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,11 +27,15 @@ public class ContactoService {
 
   private final ProductoRepository productoRepository;
 
+  private final ApplicationEventPublisher eventPublisher;
+
   public ContactoService(ContactoRepository contactoRepository,
-      CompradorRepository compradorRepository, ProductoRepository productoRepository) {
+      CompradorRepository compradorRepository, ProductoRepository productoRepository,
+      ApplicationEventPublisher eventPublisher) {
     this.contactoRepository = contactoRepository;
     this.compradorRepository = compradorRepository;
     this.productoRepository = productoRepository;
+    this.eventPublisher = eventPublisher;
   }
 
   /**
@@ -46,6 +52,8 @@ public class ContactoService {
 
     Contacto contacto = contactoRepository.save(
         new Contacto(comprador, producto, request.mensaje()));
+    eventPublisher.publishEvent(new ContactoRegistradoEvent(
+        contacto.getId(), producto.getAgricultor().getId()));
     return aRespuesta(contacto);
   }
 
