@@ -1,8 +1,10 @@
 package com.agrovalle.connect.controller;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -94,5 +96,41 @@ class ContactoControllerTest {
         .content(objectMapper.writeValueAsString(new ContactoRequest("¿Está disponible?"))))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.mensaje").value("No existe el producto con id 99"));
+  }
+
+  @Test
+  void debeListarTodosLosContactosDelAgricultor() throws Exception {
+    ContactoResponse pendiente = new ContactoResponse(11L, 3L, 10L,
+        "¿Está disponible?", LocalDateTime.now(), null, null);
+    ContactoResponse respondido = new ContactoResponse(12L, 4L, 10L,
+        "¿Cuánto cuesta?", LocalDateTime.now(), "3500", LocalDateTime.now());
+    when(contactoService.listar(7L, false)).thenReturn(List.of(pendiente, respondido));
+
+    mockMvc.perform(get("/api/v1/contactos")
+        .header("Authorization", "Bearer token-agricultor"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(2)))
+        .andExpect(jsonPath("$[0].id").value(11))
+        .andExpect(jsonPath("$[1].id").value(12));
+  }
+
+  @Test
+  void debeListarSoloContactosPendientes() throws Exception {
+    ContactoResponse pendiente = new ContactoResponse(11L, 3L, 10L,
+        "¿Está disponible?", LocalDateTime.now(), null, null);
+    when(contactoService.listar(7L, true)).thenReturn(List.of(pendiente));
+
+    mockMvc.perform(get("/api/v1/contactos?pendientes=true")
+        .header("Authorization", "Bearer token-agricultor"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(1)))
+        .andExpect(jsonPath("$[0].id").value(11));
+  }
+
+  @Test
+  void debeRechazarListadoParaComprador() throws Exception {
+    mockMvc.perform(get("/api/v1/contactos")
+        .header("Authorization", "Bearer token-comprador"))
+        .andExpect(status().isForbidden());
   }
 }
