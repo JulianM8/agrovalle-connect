@@ -1,5 +1,5 @@
 package com.agrovalle.connect.controller;
- 
+
 import com.agrovalle.connect.dto.ProductoConsultaResponse;
 import com.agrovalle.connect.dto.ProductoFiltroResponse;
 import com.agrovalle.connect.dto.ProductoPublicacionRequest;
@@ -10,39 +10,43 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
- 
+
 /**
-* Expone la publicación y consulta filtrada de productos.
-*/
+ * Expone la publicación y consulta filtrada de productos.
+ */
 @RestController
 @RequestMapping("/api/v1/productos")
 public class ProductoController {
- 
+
   private final ProductoService productoService;
- 
+
   public ProductoController(ProductoService productoService) {
     this.productoService = productoService;
   }
- 
+
+  /**
+   * Publica un producto, validando que exista un perfil de agricultor para
+   * el usuario autenticado y que la fecha de cosecha no sea anterior a hoy.
+   */
   @PostMapping
+  @PreAuthorize("hasRole('AGRICULTOR')")
   public ResponseEntity<ProductoPublicacionResponse> publicar(
-      @Valid @RequestBody ProductoPublicacionRequest request) {
-    ProductoPublicacionResponse respuesta = productoService.publicar(request);
+      @Valid @RequestBody ProductoPublicacionRequest request,
+      org.springframework.security.core.Authentication authentication) {
+    Long usuarioId = (Long) authentication.getPrincipal();
+    ProductoPublicacionResponse respuesta = productoService.publicar(request, usuarioId);
     return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
   }
 
   /**
    * Consulta productos disponibles por categoría y municipio.
-   *
-   * @param categoria categoría seleccionada
-   * @param municipio municipio de origen seleccionado
-   * @return productos encontrados con estado HTTP 200
    */
   @GetMapping
   public ResponseEntity<ProductoFiltroResponse> filtrar(
@@ -51,7 +55,7 @@ public class ProductoController {
     List<ProductoConsultaResponse> productos = productoService
         .buscarDisponiblesPorMunicipioYCategoria(municipio, categoria)
         .stream()
-        .map(this::convertirAConsulta)
+        .map(producto -> this.convertirAConsulta(producto))
         .toList();
     String mensaje = productos.isEmpty()
         ? "No hay proveedores del producto en ese municipio."
@@ -65,6 +69,7 @@ public class ProductoController {
         producto.getNombre(),
         producto.getCategoria(),
         producto.getCantidad(),
+        producto.getUnidadMedida(),
         producto.getPrecio(),
         producto.getFechaCosecha(),
         producto.getAgricultor().getId());

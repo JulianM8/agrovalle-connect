@@ -1,6 +1,7 @@
 package com.agrovalle.connect.repository;
 
 import com.agrovalle.connect.model.Agricultor;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -8,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface AgricultorRepository extends JpaRepository<Agricultor, Long> {
 
-  boolean existsByIdentificacion(String identificacion);
+  Optional<Agricultor> findByUsuarioId(Long usuarioId);
 }

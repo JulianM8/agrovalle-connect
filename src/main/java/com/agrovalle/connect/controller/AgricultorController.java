@@ -2,7 +2,10 @@ package com.agrovalle.connect.controller;
 
 import com.agrovalle.connect.dto.AgricultorRegistroRequest;
 import com.agrovalle.connect.dto.AgricultorRegistroResponse;
+import com.agrovalle.connect.dto.LoginRequest;
+import com.agrovalle.connect.dto.LoginResponse;
 import com.agrovalle.connect.service.AgricultorService;
+import com.agrovalle.connect.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +22,30 @@ import org.springframework.web.bind.annotation.RestController;
 public class AgricultorController {
 
     private final AgricultorService agricultorService;
+    
+    private final AuthService authService;
 
-    public AgricultorController(AgricultorService agricultorService) {
+    public AgricultorController(AgricultorService agricultorService, AuthService authService) {
         this.agricultorService = agricultorService;
+        this.authService = authService;
     }
 
+    /**
+     * Registra un nuevo agricultor, validando que su identificación no exista.
+     */
     @PostMapping("/register")
     public ResponseEntity<AgricultorRegistroResponse> registrar(
             @Valid @RequestBody AgricultorRegistroRequest request) {
         AgricultorRegistroResponse respuesta = agricultorService.registrar(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(respuesta);
+    }
+
+    /**
+     * Autentica a un agricultor mediante su identificación y contraseña.
+     * Si las credenciales son válidas, genera un token JWT para el agricultor.
+     */
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        return ResponseEntity.ok(authService.login(request));
     }
 }

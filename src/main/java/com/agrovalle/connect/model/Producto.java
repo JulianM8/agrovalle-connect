@@ -2,6 +2,8 @@ package com.agrovalle.connect.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,6 +13,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import com.agrovalle.connect.model.enums.UnidadMedida;
 
 /**
  * Entidad que representa un producto agrícola publicado por un agricultor.
@@ -32,6 +36,10 @@ public class Producto {
     @Column(nullable = false)
     private Integer cantidad;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "unidad_medida", nullable = false)
+    private UnidadMedida unidadMedida;
+
     @Column(nullable = false)
     private BigDecimal precio;
 
@@ -46,16 +54,17 @@ public class Producto {
     }
 
     public Producto(String nombre, String categoria, Integer cantidad,
-            BigDecimal precio, LocalDate fechaCosecha, Agricultor agricultor) {
+            UnidadMedida unidadMedida, BigDecimal precio, LocalDate fechaCosecha, Agricultor agricultor) {
         this.nombre = nombre;
         this.categoria = categoria;
         this.cantidad = cantidad;
+        this.unidadMedida = unidadMedida;
         this.precio = precio;
         this.fechaCosecha = fechaCosecha;
         this.agricultor = agricultor;
     }
 
-    public Long getId() {
+     public Long getId() {
         return id;
     }
 
@@ -85,6 +94,14 @@ public class Producto {
 
     public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public UnidadMedida getUnidadMedida() {
+        return unidadMedida;
+    }
+
+    public void setUnidadMedida(UnidadMedida unidadMedida) {
+        this.unidadMedida = unidadMedida;
     }
 
     public BigDecimal getPrecio() {

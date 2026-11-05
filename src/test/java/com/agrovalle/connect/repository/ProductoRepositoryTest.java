@@ -4,6 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.agrovalle.connect.model.Agricultor;
 import com.agrovalle.connect.model.Producto;
+import com.agrovalle.connect.model.Usuario;
+import com.agrovalle.connect.model.enums.Rol;
+import com.agrovalle.connect.model.enums.UnidadMedida;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -15,6 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 @Transactional
 class ProductoRepositoryTest {
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private AgricultorRepository agricultorRepository;
@@ -48,13 +55,17 @@ class ProductoRepositoryTest {
     }
 
     private Agricultor crearAgricultor(String identificacion, String municipio) {
-        return agricultorRepository.save(new Agricultor(
+        Usuario usuario = usuarioRepository.save(new Usuario(
+                identificacion,
                 "Agricultor",
                 "De Prueba",
-                identificacion,
-                municipio,
                 "3001234567",
-                identificacion + "@correo.com"));
+                identificacion + "@correo.com",
+                "contrasena123",
+                Rol.AGRICULTOR));
+        return agricultorRepository.save(new Agricultor(
+                municipio,
+                usuario));
     }
 
     private Producto crearProducto(String nombre, String categoria, Agricultor agricultor) {
@@ -62,6 +73,7 @@ class ProductoRepositoryTest {
                 nombre,
                 categoria,
                 10,
+                UnidadMedida.KILOGRAMO,
                 new BigDecimal("3500"),
                 LocalDate.now().plusDays(5),
                 agricultor);

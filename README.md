@@ -84,12 +84,14 @@ gitGraph
 ## 4. Stack técnico
 
 - Java 17 — lenguaje de programación principal del backend
-- Spring Boot — framework que facilita la creación de aplicaciones web.
-- PostgreSQL — sistema de base de datos relacional.
+- Spring Boot 4.1.1 — framework que facilita la creación de aplicaciones web.
+- Spring Security + JWT — las contraseñas se almacenan cifradas con BCrypt, nunca en texto plano.
+- PostgreSQL — sistema de base de datos relacional (persistencia real); H2 en memoria para las pruebas automatizadas.
 - Maven — herramienta de gestión de dependencias.
-- JUnit 5 — framework para escribir y ejecutar pruebas unitarias sobre la lógica de negocio.
-- JaCoCo — herramienta que mide el porcentaje de cobertura de código cubierto por las pruebas unitarias.
+- JUnit 5 + Mockito — framework para escribir y ejecutar pruebas unitarias sobre la lógica de negocio.
+- JaCoCo — herramienta que mide el porcentaje de cobertura de código cubierto por las pruebas unitarias (mínimo 60 % exigido por el pipeline).
 - Checkstyle — herramienta de análisis estático que verifica que el código cumpla las reglas de estilo definidas
+
 
 ## 5. Cómo contribuir (flujo local)
 
@@ -102,7 +104,4 @@ git push origin feature/HU0X-descripcion-corta
 # Abrir Pull Request hacia develop, asignar 1-2 revisores, esperar aprobación
 ```
 
-## 6. API del catálogo
 
-El catálogo permite consultar productos por categoría y municipio. El contrato del endpoint,
-los parámetros y los ejemplos de respuesta están en [API de productos](docs/api-productos.md).

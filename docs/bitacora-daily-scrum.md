@@ -98,4 +98,74 @@ Además, cargué datos de prueba mediante `data.sql` y desarrollé pruebas unita
 
 cierre de de documentacion, verificacion de evidencias y revision de las historias de usuario con sus respectivas tareas para el sprint 1.
 
+---
+
+## Daily — Jueves 8 de octubre de 2026 (posterior al cierre formal del Sprint 1)
+*(Revisión de la decisión de T2.6 y migración a jwt posterior al cierre del sprint)*
+
+
+
+- Ayer: Con el Sprint 1 ya cerrado y entregado, el equipo revisó la decisión tomada el 28
+  de septiembre de mantener `agricultorId` en el cuerpo de la petición para identificar al
+  agricultor al publicar un producto.
+
+- Hoy: todo el equipo participó en la migración a autenticación JWT: se agregó el campo `contrasena` (cifrado con BCrypt)
+  a `Agricultor` y al registro, implementó `JwtService` y `AuthService` con el endpoint
+  `POST /api/v1/auth/login` y creó
+  `JwtAuthenticationFilter`. Actualizó `ProductoController`/`ProductoService` para tomar el
+  agricultor del token en vez del cuerpo, y reescribió las pruebas afectadas
+  (`AgricultorServiceTest`, `AuthServiceTest`, `AgricultorControllerTest`,
+  `ProductoServiceTest`, `ProductoControllerTest`, `ProductoRepositoryTest`).
+- Impedimentos: algunas fallas en los test por una mala implementacion de los cambios o logica faltante en la migracion a JWT, se resolvieron al revisar el flujo de autenticación y la inyección del token en los test.
+
+**Motivo del cambio:** mejorar la seguridad de la aplicación al implementar un sistema de autenticación basado en tokens JWT, ademas de ser un requisito importante para la aplicación.
+
+- En esta misma seccion se planteo la actualizacion de la documentacion entre todo el equipo para reflejar los cambios en la autenticación y el flujo de uso de la API.
+
+# Bitácora de Daily Scrum — Sprint 2 — AgroValle Connect
+
+
+## Daily — Sabado 31 de octubre de 2026
+
+**Julian Mina (Scrum Master) — prerrequisitos (registro de comprador y roles)**
+
+- **Ayer:** Implementó la entidad `Comprador` con relación uno a uno con `Usuario`, dirección de entrega y coordenadas opcionales, además de `CompradorRepository`. Creó los DTOs de registro con validaciones, `CompradorService` y el endpoint `POST /api/v1/auth/register/comprador`. El servicio reutiliza una cuenta existente cuando la identificación ya pertenece a un usuario, agrega el rol `COMPRADOR` y valida primero la contraseña. También activó la seguridad por método y restringió la publicación de productos al rol `AGRICULTOR` mediante `@PreAuthorize`. Escribió pruebas JUnit 5 y MockMvc para el registro y la autorización.
+- **Hoy:** Ejecutar `mvnw verify` completo sin omitir JaCoCo, revisar `git status`, subir la rama `feature/sprint2-prerrequisitos-comprador` con dos commits separados (uno para T0.1–T0.5 y otro para la corrección de seguridad en `AgricultorService`) y abrir el Pull Request hacia `develop`, solicitando revisión.
+- **Impedimentos:** No se reportaron impedimentos para implementar el registro de comprador, porque se tomó como base la estructura existente de agricultor.
+- **Hallazgo adicional:** Durante el trabajo se detectó que `AgricultorService` no validaba la contraseña al reutilizar una cuenta existente. Se corrigió este problema y se ajustaron sus pruebas para evitar que alguien pudiera agregar un rol a una cuenta ajena con solo conocer su identificación.
+
+## Daily — Lunes 2 de noviembre de 2026
+
+**Yenni Obando (QA / Documentador) — HU-10 Pagos en línea (T10.1–T10.11)**
+
+- **Ayer:** Implementó las entidades `Pedido`, `DetallePedido` y `Pago`, sus enums de estado y los repositorios correspondientes. También creó los DTOs con validaciones y `PedidoService`, incluyendo validaciones de producto y cantidad disponible, la regla de un solo agricultor por carrito y el cálculo del total. Implementó el patrón Strategy para los medios de pago (Tarjeta, PSE y Contraentrega), `PagoService` y los endpoints para crear pedidos y consultar/registrar pagos.
+- **Hoy:** Escribir y subir las pruebas JUnit 5 y MockMvc de pedido y pago (T10.10), ejecutar `mvnw verify` completo para alcanzar el 60 % de cobertura de JaCoCo y abrir el Pull Request de T10.8 y T10.9 hacia `develop`, solicitando revisión.
+- **Impedimentos:** El CI falló por cobertura de JaCoCo inferior al 60 %, debido a que todavía faltaban las pruebas de pedido y pago.
+- **Otros avances y dificultades reportados:** Corrigió errores de compilación causados por diferencias entre las clases locales y las subidas (`PedidoResponse`, `PagoResponse` y `MedioPagoStrategy`). También resolvió un rechazo de `push` integrando los cambios remotos de la rama.
+
+---
+
+## Daily — Martes 3 de noviembre de 2026
+
+**Lesly Quintero (Product Owner) — HU-13 Cancelación del pedido (T13.1–T13.5)**
+
+- **Ayer:** Implementó `PedidoService.cancelar`, permitiendo cancelar pedidos en estado `PENDIENTE` o `CONFIRMADO`, guardar el motivo y cambiar el estado a `CANCELADO`. Validó que el pedido perteneciera al comprador autenticado y agregó el listado de pedidos del agricultor. Implementó el reembolso de pagos completados, expuso `POST /api/v1/pedidos/{id}/cancelacion` para el rol `COMPRADOR` y registró las excepciones de pedido inválido y recurso no encontrado en `GlobalExceptionHandler`. También escribió pruebas JUnit 5 y MockMvc para los escenarios de cancelación, reembolso, validaciones, roles y autenticación.
+- **Hoy:** Ejecutar `mvnw verify` completo con JaCoCo y Checkstyle, corregir los errores que aparezcan, hacer `git pull origin develop`, subir los cuatro commits semánticos a la rama `feature/HU-13-cancelacion-pedido` y abrir el Pull Request hacia `develop` para solicitar revisión.
+- **Impedimentos:** El código todavía no se había compilado ni probado en su máquina, por lo que estaba pendiente confirmar el resultado de `mvnw verify`. Las tareas de cancelación y reembolso están acopladas y requieren acordar el orden de integración con el equipo. El cambio en el constructor de `PedidoService` obligó a actualizar sus pruebas.
+---
+
+**Josué Mindineros (Backend / DevOps) — HU-05 Contacto directo (T5.1–T5.9)**
+
+- **Ayer:** Mapeó la entidad `Contacto` según el DER y creó `ContactoRepository`. Definió los DTOs y sus validaciones, implementó `ContactoService` y los endpoints para registrar solicitudes de contacto y responderlas. Publicó `ContactoRegistradoEvent`; el alcance implementado permite consultar las solicitudes en la aplicación, sin envío de correos ni notificaciones push. Añadió pruebas JUnit 5 y MockMvc, e implementó `GET /api/v1/contactos` con el filtro opcional `?pendientes=true`, restringido al agricultor autenticado.
+- **Hoy:** Completó todas las tareas asignadas de HU-05 (T5.1–T5.9). T5.9 quedó subida a GitHub y fue revisada por un compañero, quien confirmó que la funcionalidad opera correctamente.
+- **Impedimentos:** Al inicio fue necesario ajustar el alcance y la ubicación de algunos archivos para seguir el patrón del repositorio; el PR final de T5.1 quedó limitado a `Contacto.java`. Las pruebas del listado se completaron junto con T5.9 porque el endpoint GET todavía no existía al trabajar en T5.8. La verificación automatizada se realizó con H2; no se ejecutó una comprobación contra una instancia real de PostgreSQL.
+- **Verificación reportada:** La última ejecución local de T5.9 terminó con `BUILD SUCCESS`, 74 pruebas aprobadas, cero errores de Checkstyle y cobertura de JaCoCo aprobada.
+
+---
+
+## Daily — Miércoles 4 de noviembre de 2026
+
+cierre de de documentacion, verificacion de evidencias y revision de las historias de usuario con sus respectivas tareas para el sprint 2.
+
+
 
