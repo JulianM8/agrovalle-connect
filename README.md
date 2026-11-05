@@ -92,16 +92,6 @@ gitGraph
 - JaCoCo — herramienta que mide el porcentaje de cobertura de código cubierto por las pruebas unitarias (mínimo 60 % exigido por el pipeline).
 - Checkstyle — herramienta de análisis estático que verifica que el código cumpla las reglas de estilo definidas
 
-### Autenticación
-
-A partir de la migración a JWT, el flujo de uso de la API es:
-
-1. El agricultor se registra: `POST /api/v1/auth/register` (incluye una contraseña, que se guarda cifrada).
-2. El agricultor inicia sesión: `POST /api/v1/auth/login` → devuelve un token JWT.
-3. Para publicar productos (`POST /api/v1/productos`), el token se envía en el encabezado `Authorization: Bearer <token>`. El agricultor que publica es el que está autenticado en el token, ya no un `agricultorId` enviado en el cuerpo de la petición.
-4. La consulta del catálogo (`GET /api/v1/productos?categoria=&municipio=`) sigue siendo pública, para que cualquier comprador pueda navegar la oferta sin necesidad de iniciar sesión.
-
-Más detalle del contrato de cada endpoint en [API de productos](docs/api-productos.md).
 
 ## 5. Cómo contribuir (flujo local)
 
