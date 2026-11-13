@@ -32,10 +32,12 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable())
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(auth -> auth
+                .authorizeHttpRequests(auth -> auth
             .requestMatchers("/error").permitAll()
             .requestMatchers("/api/v1/auth/**").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/v1/estado").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/v1/productos").permitAll()
+            .requestMatchers(HttpMethod.GET, "/actuator/health").permitAll()
             .anyRequest().authenticated())
         .addFilterBefore(new JwtAuthenticationFilter(jwtService),
             UsernamePasswordAuthenticationFilter.class);
