@@ -1,4 +1,5 @@
-name: CI
+
+name: Verification & Quality Gates (CI)
 
 on:
   push:
@@ -8,7 +9,9 @@ on:
 
 jobs:
   build:
+    name: Build, Tests & Quality Gates
     runs-on: ubuntu-latest
+
     steps:
       - name: Descargar el codigo
         uses: actions/checkout@v4
@@ -23,12 +26,14 @@ jobs:
       - name: Dar permisos de ejecucion al wrapper
         run: chmod +x mvnw
 
-      - name: Compilar, probar y verificar cobertura
-        run: ./mvnw -B verify
+      - name: Compilar, ejecutar pruebas y verificar calidad
+        run: ./mvnw -B clean verify
 
-      - name: Guardar reporte de cobertura
+      - name: Guardar reporte de cobertura JaCoCo
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
-          path: target/site/jacoco
+          path: target/site/jacoco/
+          if-no-files-found: warn
+          retention-days: 30
