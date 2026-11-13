@@ -1,0 +1,37 @@
+name: Continuous Deployment (CD) - Staging Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  verify-and-test:
+    name: Verification & Quality Gates (CI)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Dar permisos de ejecución al Maven Wrapper
+        run: chmod +x mvnw
+
+      - name: Compilar, ejecutar pruebas y verificar calidad
+        run: ./mvnw -B clean verify
+
+  deploy-to-staging:
+    name: Deploy Application to Staging Cloud
+    needs: verify-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Staging Deployment Webhook
+        run: |
+          echo "Ejecutando despliegue automatico a ambiente Staging..."
