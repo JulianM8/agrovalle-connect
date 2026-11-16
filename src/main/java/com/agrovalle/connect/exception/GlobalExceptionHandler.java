@@ -116,6 +116,14 @@ public class GlobalExceptionHandler {
   }
 
   /**
+   * Maneja ConflictoException y responde 409 (Conflict).
+   */
+  @ExceptionHandler(ConflictoException.class)
+  public ResponseEntity<Map<String, String>> manejarConflicto(ConflictoException ex) {
+    return construirRespuesta(HttpStatus.CONFLICT, ex.getMessage());
+  }
+
+  /**
    * Construye una respuesta HTTP con el estado y mensaje especificados.
    */
   private ResponseEntity<Map<String, String>> construirRespuesta(
