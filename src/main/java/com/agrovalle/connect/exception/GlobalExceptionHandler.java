@@ -107,6 +107,15 @@ public class GlobalExceptionHandler {
   }
 
   /**
+   * Maneja CriterioOrdenInvalidoException y responde 400 (Bad Request).
+   */
+  @ExceptionHandler(CriterioOrdenInvalidoException.class)
+  public ResponseEntity<Map<String, String>> manejarCriterioOrdenInvalido(
+      CriterioOrdenInvalidoException ex) {
+    return construirRespuesta(HttpStatus.BAD_REQUEST, ex.getMessage());
+  }
+
+  /**
    * Maneja RecursoNoEncontradoException y responde 404 (Not Found).
    */
   @ExceptionHandler(RecursoNoEncontradoException.class)
