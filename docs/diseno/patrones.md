@@ -136,3 +136,41 @@ public class PagoService {
 - **Evolución:** al integrar una pasarela real, se agrega p. ej.
   `WompiStrategy implements MedioPagoStrategy` y se retira la simulada, sin
   cambios en `PagoService` ni en los controladores.
+
+
+## Strategy: ordenamiento de entregas de la ruta
+
+**Problema de negocio:** el transportista necesita ver en qué orden entregar los
+pedidos del día. Hay varios criterios válidos (agrupar por municipio, minimizar
+la distancia recorrida) y se pueden agregar más. Programarlos con if/else dentro
+de `RutaService` obligaría a modificar esa clase por cada criterio nuevo.
+
+**Solución:** cada criterio implementa `OrdenEntregaStrategy`. `RutaService`
+(contexto) recibe un `Map<String, OrdenEntregaStrategy>` y delega en la estrategia
+pedida; si el criterio no existe responde 400. Agregar un criterio es crear un
+`@Component` más (principio abierto/cerrado, modificabilidad).
+
+**Participantes:**
+- Contexto: `RutaService`
+- Estrategia: `OrdenEntregaStrategy`
+- Estrategias concretas: `PorMunicipioStrategy` ("MUNICIPIO") y
+  `VecinoMasCercanoStrategy` ("VECINO_MAS_CERCANO", por defecto). Esta usa la
+  distancia de Haversine entre coordenadas; los compradores sin coordenadas
+  quedan al final.
+
+```mermaid
+classDiagram
+  class RutaService {
+    -Map~String, OrdenEntregaStrategy~ estrategias
+    +consultarRutaDelDia(usuarioId, fecha, criterio) RutaDiaResponse
+  }
+  class OrdenEntregaStrategy {
+    <<interface>>
+    +ordenar(pedidos) List~Pedido~
+  }
+  class PorMunicipioStrategy
+  class VecinoMasCercanoStrategy
+  RutaService --> OrdenEntregaStrategy
+  OrdenEntregaStrategy <|.. PorMunicipioStrategy
+  OrdenEntregaStrategy <|.. VecinoMasCercanoStrategy
+```

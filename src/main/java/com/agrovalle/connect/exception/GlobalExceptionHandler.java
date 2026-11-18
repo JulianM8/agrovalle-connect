@@ -107,12 +107,29 @@ public class GlobalExceptionHandler {
   }
 
   /**
+   * Maneja CriterioOrdenInvalidoException y responde 400 (Bad Request).
+   */
+  @ExceptionHandler(CriterioOrdenInvalidoException.class)
+  public ResponseEntity<Map<String, String>> manejarCriterioOrdenInvalido(
+      CriterioOrdenInvalidoException ex) {
+    return construirRespuesta(HttpStatus.BAD_REQUEST, ex.getMessage());
+  }
+
+  /**
    * Maneja RecursoNoEncontradoException y responde 404 (Not Found).
    */
   @ExceptionHandler(RecursoNoEncontradoException.class)
   public ResponseEntity<Map<String, String>> manejarRecursoNoEncontrado(
       RecursoNoEncontradoException ex) {
     return construirRespuesta(HttpStatus.NOT_FOUND, ex.getMessage());
+  }
+
+  /**
+   * Maneja ConflictoException y responde 409 (Conflict).
+   */
+  @ExceptionHandler(ConflictoException.class)
+  public ResponseEntity<Map<String, String>> manejarConflicto(ConflictoException ex) {
+    return construirRespuesta(HttpStatus.CONFLICT, ex.getMessage());
   }
 
   /**
