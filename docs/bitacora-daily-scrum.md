@@ -104,7 +104,6 @@ cierre de de documentacion, verificacion de evidencias y revision de las histori
 *(Revisión de la decisión de T2.6 y migración a jwt posterior al cierre del sprint)*
 
 
-
 - Ayer: Con el Sprint 1 ya cerrado y entregado, el equipo revisó la decisión tomada el 28
   de septiembre de mantener `agricultorId` en el cuerpo de la petición para identificar al
   agricultor al publicar un producto.
@@ -166,6 +165,52 @@ cierre de de documentacion, verificacion de evidencias y revision de las histori
 ## Daily — Miércoles 4 de noviembre de 2026
 
 cierre de de documentacion, verificacion de evidencias y revision de las historias de usuario con sus respectivas tareas para el sprint 2.
+
+
+# Bitácora de Daily Scrum — Sprint 3 — AgroValle Connect
+
+
+## Daily — Viernes 13 de noviembre de 2026 
+
+**Julian Mina (Scrum Master) — Despliegue continuo a Staging**
+
+- **Ayer:** Creó la base `agrovalle_staging` en Neon, Convirtió la cadena de Neon a formato JDBC, creó `application-staging.yml` con variables de entorno (T03.1), registró los secretos en GitHub Secrets (T03.2) y configuró `.github/workflows/cd.yml` con los jobs `verify-and-test` y `deploy-to-staging` (T03.3), dejando solo `./mvnw clean verify` porque ya incluye JaCoCo. Agregó un `Dockerfile` multietapa y `.dockerignore`, creó el servicio en Render y lo conectó a Neon. Implementó `GET /api/v1/estado` con su prueba y habilitó en `SecurityConfig` el acceso público a `/api/v1/estado` y `/actuator/health` (T03.5). Redactó el ADR-001 (T03.4) y el borrador de `docs/sprint-3-review.md`.
+- **Hoy:** Correr `.\mvnw.cmd verify`, hacer el merge del PR y confirmar que el job `deploy-to-staging` dispara el despliegue en Render, probar `GET /api/v1/estado` y `POST /api/v1/auth/register` en la URL pública y tomar capturas, rotar la contraseña del rol de Neon (actualizando GitHub y Render), completar `docs/sprint-3-review.md` y mover T03.1–T03.5 a Done.
+- **Impedimentos:** El primer arranque en Render falló con "Connection to localhost:5432 refused" por no tener activo el perfil `staging`; se resolvió agregando `SPRING_PROFILES_ACTIVE=staging`. A tener en cuenta: el plan gratuito de Render y Neon se duerme por inactividad y la primera petición puede tardar uno o dos minutos. 
+
+---
+
+## Daily —  sábado 14 de noviembre de 2026
+
+**Julian Mina (Scrum Master) — prerrequisitos (registro de transportista, T0.6–T0.9)**
+
+- **Ayer:** Implementó la entidad `Transportista` con relación uno a uno con `Usuario` y municipio, además de `TransportistaRepository`. Creó los DTOs de registro con validaciones, `TransportistaService` y el endpoint `POST /api/v1/auth/register/transportista`. El servicio reutiliza una cuenta existente cuando la identificación ya pertenece a un usuario, valida primero la contraseña y agrega el rol `TRANSPORTISTA`. Escribió pruebas JUnit 5 y MockMvc (cuenta nueva, reutilización de cuenta, contraseña incorrecta, duplicados 409 y datos inválidos 400).
+- **Hoy:** Ejecutar `mvnw verify` completo sin omitir JaCoCo, revisar `git status`, subir la rama `feature/sprint3-prerrequisitos-transportista` con dos commits (T0.6–T0.7 y T0.8–T0.9) y abrir el Pull Request hacia `develop`.
+- **Impedimentos:** Ninguno reportado; se tomó como base la estructura de `Comprador` del Sprint 2.
+
+---
+
+## Daily — sábado 14 de noviembre de 2026
+
+**Julian Mina (Scrum Master) — HU-06 Asignación de vehículo de transporte (T6.1–T6.9)**
+
+- **Ayer:** Creó las entidades `Vehiculo` (tipo de transporte, placa única, capacidad en kg, `@OneToOne` con `Transportista`), `Ruta` (fecha y vehículo, única por vehículo y fecha) y `AsignacionTransporte` (pedido único, ruta, orden de entrega y fecha de asignación), y sus repositorios. Expuso `POST /api/v1/vehiculos` para `ROLE_TRANSPORTISTA` (respuestas 201, 400 y 409) y `GET /api/v1/vehiculos?tipoTransporte=` para `ROLE_AGRICULTOR`, creando `ConflictoException` y registrándola en `GlobalExceptionHandler`. Implementó `DespachoService.asignarVehiculo` (valida agricultor dueño del pedido, sin asignación previa, estado `CONFIRMADO` y vehículo existente; busca o crea la ruta, asigna el siguiente orden y pasa el pedido a `EN_TRANSPORTE`) y `POST /api/v1/pedidos/{id}/asignacion` en un `DespachoController` separado. Agregó `AsignacionRegistradaEvent` y `GET /api/v1/pedidos/{id}/transporte` para el comprador. Escribió las pruebas JUnit 5, MockMvc y Mockito (`VehiculoControllerTest`, `DespachoControllerTest`, `DespachoServiceTest`, `VehiculoServiceTest`).
+- **Hoy:** Ejecutar `.\mvnw.cmd verify` completo, subir la rama `feature/HU06-asignacion-vehiculo` y abrir el Pull Request hacia `develop`; mover T6.1–T6.9 a Done.
+- **Impedimentos:** No existía una excepción para el 409 (se creó `ConflictoException`). T6.5 y T6.8 modifican archivos de T6.4 y T6.6, por lo que hubo que elegir con cuidado los archivos de cada commit. Las pruebas quedaron en un commit aparte (T6.9).
+
+---
+
+## Daily — sábado 14 de noviembre de 2026
+
+**Yenni Obando (QA / Documentador) — HU-07 Programación de rutas de despacho (T7.1–T7.7)**
+
+- **Ayer:** Creó los DTOs `RutaDiaResponse` y `ParadaRutaResponse` (T7.1) e implementó el patrón Strategy `OrdenEntregaStrategy` con `PorMunicipioStrategy` y `VecinoMasCercanoStrategy` (distancia de Haversine; los compradores sin coordenadas van al final) (T7.2). Documentó el patrón en `docs/diseno/patrones.md` con el diagrama de clases en Mermaid (T7.6). Implementó `RutaService.consultarRutaDelDia` (solo lectura, sin modificar `orden_entrega`), `VehiculoRepository.findByTransportistaUsuarioId` y `CriterioOrdenInvalidoException` (T7.3), expuso `GET /api/v1/rutas?fecha=&criterio=` para `ROLE_TRANSPORTISTA` con 200, 400 y 404 (T7.4), cargó datos de prueba en `data.sql` (T7.5) y escribió las pruebas JUnit 5, MockMvc y Mockito (200 con paradas ordenadas, cada estrategia, sin coordenadas al final, 404, 400 y 403) (T7.7).
+- **Hoy:** Ejecutar `.\mvnw.cmd verify` completo, abrir el Pull Request de `feature/HU07-rutas-despacho` hacia `develop`, pedir revisión y mover T7.1–T7.7 a Done.
+- **Impedimentos:** Ninguno reportado; se realizo con una buena base teniendo en cuenta hu-06 y la estructura del proyecto. 
+
+## Daily — domingo 15/Lunes 16 de noviembre de 2026
+
+Cierre de documentación, verificación de evidencias (capturas de Staging, `docs/sprint-3-review.md`) y revisión de las historias de usuario con sus respectivas tareas para el Sprint 3.
 
 
 
