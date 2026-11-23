@@ -82,7 +82,7 @@ Se realizará una demostración en Postman de las historias de usuario trabajada
 
 - Repositorio: `github.com/JulianM8/agrovalle-connect`
 - Tablero Kanban: proyecto "AgroValle Connect" (GitHub Projects), vista "Sprint 2"
-- Sprint Backlog: `BACKLOG.md`
+- Sprint Backlog: `product_backlog_bdd.md` en `docs/requirements/`
 - Planificación técnica: `docs/sprint-2-planning.md`
 
 **Video del tablero kanban demostrando el cierre de todas las tareas comprometidas y las ramas creadas:**

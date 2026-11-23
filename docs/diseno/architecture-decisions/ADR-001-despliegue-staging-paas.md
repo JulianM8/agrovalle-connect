@@ -1,8 +1,8 @@
 # ADR-001: Adopción de Plataforma PaaS y GitHub Actions para Despliegue Continuo (CD) en Staging
 
 * **Estado:** Aprobado
-* **Fecha:** 2026-11-12
-* **Autores:** Célula de Desarrollo AgroValle Connect
+* **Fecha:** 12 de noviembre de 2026
+* **Autores:** Julian Mina, Josué Mindineros, Lesly Quintero, Yenni Obando
 * **Contexto Técnico:** Asignatura Ingeniería de Software II - UNIAJC
 
 ## Contexto y Problemática
