@@ -9,6 +9,7 @@ import com.agrovalle.connect.dto.DetallePedidoResponse;
 import com.agrovalle.connect.dto.DetallePedidoRequest;
 import com.agrovalle.connect.dto.PedidoRequest;
 import com.agrovalle.connect.dto.PedidoResponse;
+import com.agrovalle.connect.dto.SeguimientoResponse;
 import com.agrovalle.connect.exception.RecursoNoEncontradoException;
 import com.agrovalle.connect.exception.PedidoInvalidoException;
 import com.agrovalle.connect.model.Agricultor;
@@ -180,6 +181,39 @@ public class PedidoService {
             p.getId(), p.getEstado(), p.getDireccionEntrega(),
             p.getFechaCreacion(), p.getMotivoCancelacion()))
         .toList();
+  }
+
+  /**
+   * Devuelve el seguimiento de un pedido del comprador autenticado: el estado
+   * actual y la fecha estimada de llegada, cuando exista. Responde 404 si el
+   * pedido no existe o es de otro comprador.
+   */
+  @Transactional(readOnly = true)
+  public SeguimientoResponse consultarSeguimiento(Long pedidoId, Long usuarioId) {
+    Pedido pedido = obtenerPedidoDelComprador(pedidoId, usuarioId);
+    return new SeguimientoResponse(
+        pedido.getId(),
+        pedido.getEstado(),
+        pedido.getFechaCreacion(),
+        pedido.getFechaEstimadaLlegada(),
+        pedido.getFechaEntrega(),
+        mensajeDeSeguimiento(pedido));
+  }
+
+  private String mensajeDeSeguimiento(Pedido pedido) {
+    String mensaje = switch (pedido.getEstado()) {
+      case PENDIENTE -> "Pedido pendiente de pago";
+      case CONFIRMADO -> "Pedido confirmado, en preparación para el despacho";
+      case EN_TRANSPORTE -> "Tu pedido va en camino";
+      case ENTREGADO -> "Pedido entregado";
+      case CANCELADO -> "Pedido cancelado";
+    };
+    boolean activo = pedido.getEstado() != EstadoPedido.ENTREGADO
+        && pedido.getEstado() != EstadoPedido.CANCELADO;
+    if (activo && pedido.getFechaEstimadaLlegada() == null) {
+      return mensaje + ". Aún no hay fecha estimada de llegada";
+    }
+    return mensaje;
   }
 
   private BigDecimal total(List<DetallePedido> detalles) {

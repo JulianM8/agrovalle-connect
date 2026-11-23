@@ -8,12 +8,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.agrovalle.connect.dto.CancelacionResponse;
 import com.agrovalle.connect.repository.AgricultorRepository;
 import com.agrovalle.connect.dto.DetallePedidoRequest;
 import com.agrovalle.connect.dto.PedidoRequest;
 import com.agrovalle.connect.dto.PedidoResponse;
+import com.agrovalle.connect.dto.SeguimientoResponse;
 import com.agrovalle.connect.exception.RecursoNoEncontradoException;
 import com.agrovalle.connect.exception.PedidoInvalidoException;
 import com.agrovalle.connect.model.Agricultor;
@@ -217,5 +219,45 @@ class PedidoServiceTest {
     assertEquals(1, lista.size());
     assertEquals(EstadoPedido.CANCELADO, lista.get(0).estado());
     assertEquals("Ya no lo necesito", lista.get(0).motivoCancelacion());
+  }
+
+  private Pedido pedidoDelComprador(EstadoPedido estado) {
+    Pedido pedido = new Pedido(comprador, agricultor, "Calle 5 # 10-20");
+    pedido.setId(100L);
+    pedido.setEstado(estado);
+    return pedido;
+  }
+
+  @Test
+  void debeMostrarEstadoYFechaEstimadaDelPedido() {
+    Pedido pedido = pedidoDelComprador(EstadoPedido.EN_TRANSPORTE);
+    pedido.setFechaEstimadaLlegada(LocalDate.of(2026, 11, 25));
+    when(pedidoRepository.findById(100L)).thenReturn(Optional.of(pedido));
+
+    SeguimientoResponse respuesta = pedidoService.consultarSeguimiento(100L, 5L);
+
+    assertEquals(EstadoPedido.EN_TRANSPORTE, respuesta.estado());
+    assertEquals(LocalDate.of(2026, 11, 25), respuesta.fechaEstimadaLlegada());
+    assertEquals("Tu pedido va en camino", respuesta.mensaje());
+  }
+
+  @Test
+  void debeIndicarQueNoHayFechaEstimada() {
+    Pedido pedido = pedidoDelComprador(EstadoPedido.CONFIRMADO);
+    when(pedidoRepository.findById(100L)).thenReturn(Optional.of(pedido));
+
+    SeguimientoResponse respuesta = pedidoService.consultarSeguimiento(100L, 5L);
+
+    assertNull(respuesta.fechaEstimadaLlegada());
+    assertTrue(respuesta.mensaje().contains("Aún no hay fecha estimada"));
+  }
+
+  @Test
+  void debeRechazarSeguimientoDePedidoAjeno() {
+    Pedido pedido = pedidoDelComprador(EstadoPedido.EN_TRANSPORTE);
+    when(pedidoRepository.findById(100L)).thenReturn(Optional.of(pedido));
+
+    assertThrows(RecursoNoEncontradoException.class,
+        () -> pedidoService.consultarSeguimiento(100L, 99L));
   }
 }
