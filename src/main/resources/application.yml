@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: agrovalle-connect
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/agrovalle_connect
+    username: postgres
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration-ms: 86400000
+
+

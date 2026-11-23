@@ -1,6 +1,7 @@
--- =========-- =====================================================================
+-- ==============================================================================
 -- AgroValle Connect - Esquema de base de datos (PostgreSQL)
--- Ubicación en el repo: docs/diseno/schema.sql
+-- Ubicación en el repo: src/main/resources/db/migration/schema.sql
+-- Ejecutar sobre la base de datos: agrovalle_staging
 -- =====================================================================
 
 -- ---------------------------------------------------------------------
@@ -25,9 +26,9 @@ CREATE TABLE IF NOT EXISTS usuarios (
 CREATE TABLE IF NOT EXISTS roles_usuario (
     usuario_id BIGINT      NOT NULL,
     rol        VARCHAR(20) NOT NULL,
+    CONSTRAINT pk_roles_usuario PRIMARY KEY (usuario_id, rol),
     CONSTRAINT fk_roles_usuario_usuario FOREIGN KEY (usuario_id)
         REFERENCES usuarios (id) ON DELETE CASCADE,
-    CONSTRAINT uk_roles_usuario UNIQUE (usuario_id, rol),
     CONSTRAINT ck_roles_usuario_rol
         CHECK (rol IN ('AGRICULTOR', 'COMPRADOR', 'TRANSPORTISTA'))
 );
@@ -67,7 +68,7 @@ CREATE TABLE IF NOT EXISTS productos (
     nombre         VARCHAR(255)   NOT NULL,
     categoria      VARCHAR(255)   NOT NULL,
     cantidad       INTEGER        NOT NULL,
-    unidad_medida  VARCHAR(255)   NOT NULL,
+    unidad_medida  VARCHAR(20)   NOT NULL,
     precio         NUMERIC(38, 2) NOT NULL,
     fecha_cosecha  DATE           NOT NULL,
     agricultor_id  BIGINT         NOT NULL,
@@ -188,6 +189,7 @@ CREATE TABLE IF NOT EXISTS rutas (
     fecha       DATE   NOT NULL,
     vehiculo_id BIGINT NOT NULL,
     CONSTRAINT fk_rutas_vehiculo FOREIGN KEY (vehiculo_id)
+    CONSTRAINT uk_rutas_vehiculo_fecha UNIQUE (vehiculo_id, fecha)
         REFERENCES vehiculos (id)
 );
 

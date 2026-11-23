@@ -101,4 +101,4 @@ Estas pruebas son las que ejecuta el pipeline de GitHub Actions (`ci.yml`) en ca
 - **Tablero:** GitHub Projects — "AgroValle Connect", vista "Sprint 1"
 - **Columnas:** Backlog, To Do, In Progress (WIP 3), Testing, Done
 - **Regla de Testing:** una tarea solo pasa a Testing si tiene un Pull Request abierto hacia `develop` y el pipeline de GitHub Actions reporta *Success* (incluida la cobertura > 60%)
-- **Sprint Backlog detallado:** ver `BACKLOG.md` en la raíz del repositorio
+- **Sprint Backlog detallado:** ver `product_backlog_bdd.md` en `docs/requirements/`, con la trazabilidad de cada historia a sus criterios de aceptación Given-When-Then y a las pruebas unitarias JUnit 5 que los implementan.

@@ -57,7 +57,7 @@ Se realizo una pequeña demostracion en postman de las historias de usuario real
 
 - Repositorio: `github.com/JulianM8/agrovalle-connect`
 - Tablero Kanban: proyecto "AgroValle Connect" (GitHub Projects), vista "Sprint 1"
-- Sprint Backlog: `BACKLOG.md`
+- Sprint Backlog: `product_backlog_bdd.md` en `docs/requirements/`
 - Planificación técnica: `docs/sprint-1-planning.md`
 
 **Video del tablero kanban demostrando el cierre de todas las tareas comprometidas y las ramas creadas:**

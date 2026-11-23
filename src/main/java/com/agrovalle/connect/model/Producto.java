@@ -37,7 +37,7 @@ public class Producto {
     private Integer cantidad;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "unidad_medida", nullable = false)
+    @Column(name = "unidad_medida", nullable = false, length = 20)
     private UnidadMedida unidadMedida;
 
     @Column(nullable = false)
