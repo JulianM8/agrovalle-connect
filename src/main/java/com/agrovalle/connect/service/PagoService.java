@@ -49,6 +49,7 @@ public class PagoService {
    */
   @Transactional
   public PagoResponse pagar(Long pedidoId, PagoRequest request, Long usuarioId) {
+    pedidoRepository.findByIdParaActualizar(pedidoId); 
     Pedido pedido = pedidoService.obtenerPedidoDelComprador(pedidoId, usuarioId);
     if (pedido.getEstado() != EstadoPedido.PENDIENTE) {
       throw new PedidoInvalidoException(
