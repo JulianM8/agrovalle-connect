@@ -2,6 +2,7 @@ package com.agrovalle.connect.service;
 
 import com.agrovalle.connect.dto.InconformidadRequest;
 import com.agrovalle.connect.dto.InconformidadResponse;
+import com.agrovalle.connect.event.InconformidadRegistradaEvent;
 import com.agrovalle.connect.exception.ConflictoException;
 import com.agrovalle.connect.exception.PedidoInvalidoException;
 import com.agrovalle.connect.exception.RecursoNoEncontradoException;
@@ -12,6 +13,7 @@ import com.agrovalle.connect.model.enums.EstadoPedido;
 import com.agrovalle.connect.repository.InconformidadRepository;
 import com.agrovalle.connect.repository.PedidoRepository;
 import java.time.LocalDateTime;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +27,13 @@ public class InconformidadService {
 
   private final PedidoRepository pedidoRepository;
 
+  private final ApplicationEventPublisher eventPublisher;
+
   public InconformidadService(InconformidadRepository inconformidadRepository,
-      PedidoRepository pedidoRepository) {
+      PedidoRepository pedidoRepository, ApplicationEventPublisher eventPublisher) {
     this.inconformidadRepository = inconformidadRepository;
     this.pedidoRepository = pedidoRepository;
+    this.eventPublisher = eventPublisher;
   }
 
   /**
@@ -39,9 +44,7 @@ public class InconformidadService {
       Long usuarioId) {
     Pedido pedido = pedidoRepository.findByIdParaActualizar(pedidoId)
         .orElseThrow(() -> new RecursoNoEncontradoException("No existe el pedido con id " + pedidoId));
-    if (!pedido.getComprador().getUsuario().getId().equals(usuarioId)) {
-      throw new RecursoNoEncontradoException("No existe el pedido con id " + pedidoId);
-    }
+    validarPropietario(pedido, usuarioId);
     if (pedido.getEstado() != EstadoPedido.EN_TRANSPORTE) {
       throw new PedidoInvalidoException("El pedido debe estar en transporte para reportar una inconformidad");
     }
@@ -55,7 +58,31 @@ public class InconformidadService {
     inconformidad.setEvidenciaUrl(request.evidenciaUrl());
     inconformidad.setEstado(EstadoInconformidad.EN_REVISION);
     inconformidad.setFechaReporte(LocalDateTime.now());
-    return aRespuesta(inconformidadRepository.save(inconformidad));
+    Inconformidad guardada = inconformidadRepository.save(inconformidad);
+    eventPublisher.publishEvent(new InconformidadRegistradaEvent(
+        guardada.getId(), pedidoId, pedido.getAgricultor().getId()));
+    return aRespuesta(guardada);
+  }
+
+  /**
+   * Devuelve el reporte más reciente de un pedido del comprador autenticado.
+   */
+  @Transactional(readOnly = true)
+  public InconformidadResponse consultar(Long pedidoId, Long usuarioId) {
+    Pedido pedido = pedidoRepository.findById(pedidoId)
+        .orElseThrow(() -> new RecursoNoEncontradoException("No existe el pedido con id " + pedidoId));
+    validarPropietario(pedido, usuarioId);
+    return inconformidadRepository.findByPedidoIdOrderByFechaReporteDesc(pedidoId).stream()
+        .findFirst()
+        .map(this::aRespuesta)
+        .orElseThrow(() -> new RecursoNoEncontradoException(
+            "No existe una inconformidad para el pedido con id " + pedidoId));
+  }
+
+  private void validarPropietario(Pedido pedido, Long usuarioId) {
+    if (!pedido.getComprador().getUsuario().getId().equals(usuarioId)) {
+      throw new RecursoNoEncontradoException("No existe el pedido con id " + pedido.getId());
+    }
   }
 
   private InconformidadResponse aRespuesta(Inconformidad inconformidad) {
