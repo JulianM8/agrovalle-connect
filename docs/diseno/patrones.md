@@ -140,7 +140,9 @@ public class PagoService {
 
 ## Strategy: ordenamiento de entregas de la ruta
 
-**Problema de negocio:** el transportista necesita ver en qué orden entregar los
+### Problema de negocio:
+
+El transportista necesita ver en qué orden entregar los
 pedidos del día. Hay varios criterios válidos (agrupar por municipio, minimizar
 la distancia recorrida) y se pueden agregar más. Programarlos con if/else dentro
 de `RutaService` obligaría a modificar esa clase por cada criterio nuevo.
@@ -174,3 +176,95 @@ classDiagram
   OrdenEntregaStrategy <|.. PorMunicipioStrategy
   OrdenEntregaStrategy <|.. VecinoMasCercanoStrategy
 ```
+
+
+## Observer (Comportamiento): eventos de dominio — HU-05, HU-06, HU-09 y HU-15 (Sprint 4)
+
+### Problema de negocio:
+
+Varias acciones de la plataforma tienen consecuencias que no pertenecen al
+servicio que las origina: al registrar un contacto hay que avisar al agricultor,
+al asignar un vehículo hay que registrar la asignación, al reportar una
+inconformidad hay que notificar a las partes y, al confirmar la recepción de un
+pedido, debe liberarse el pago retenido (HU-11).
+
+Sin un patrón, RecepcionService llamaría directamente al módulo de pagos:
+quedaría acoplado a él y cada reacción nueva obligaría a modificar un método ya
+probado.
+
+### Solución:
+
+Cada servicio publica un evento de dominio con `ApplicationEventPublisher` y no
+conoce a quien lo escucha. Los observadores se registran con `@EventListener` o
+`@TransactionalEventListener`, así que agregar una reacción nueva es crear un
+listener, sin tocar el servicio que publica.
+
+- **Mecanismo Spring Boot:** `ApplicationEventPublisher` + records inmutables
+  como eventos.
+- **Atributo ISO/IEC 25010:** Mantenibilidad (modificabilidad).
+- **Principio:** abierto/cerrado (OCP) y bajo acoplamiento.
+
+### Diagrama de clases
+
+```mermaid
+classDiagram
+    class ApplicationEventPublisher {
+        <<interface>>
+        +publishEvent(Object evento)
+    }
+    class ContactoRegistradoEvent {
+        <<record>>
+        Long contactoId
+        Long agricultorId
+    }
+    class AsignacionRegistradaEvent {
+        <<record>>
+    }
+    class InconformidadRegistradaEvent {
+        <<record>>
+    }
+    class RecepcionConfirmadaEvent {
+        <<record>>
+        Long pedidoId
+        Long compradorId
+        Long agricultorId
+        LocalDateTime fechaRecepcion
+    }
+    class ContactoService
+    class AsignacionService
+    class InconformidadService
+    class RecepcionService {
+        +confirmarRecepcion(Long pedidoId, Long usuarioId) RecepcionResponse
+    }
+    class RecepcionConfirmadaListener {
+        <<@TransactionalEventListener>>
+        +alConfirmarRecepcion(RecepcionConfirmadaEvent evento)
+    }
+
+    ContactoService ..> ApplicationEventPublisher : usa
+    AsignacionService ..> ApplicationEventPublisher : usa
+    InconformidadService ..> ApplicationEventPublisher : usa
+    RecepcionService ..> ApplicationEventPublisher : usa
+    ContactoService ..> ContactoRegistradoEvent : publica
+    AsignacionService ..> AsignacionRegistradaEvent : publica
+    InconformidadService ..> InconformidadRegistradaEvent : publica
+    RecepcionService ..> RecepcionConfirmadaEvent : publica
+    RecepcionConfirmadaListener ..> RecepcionConfirmadaEvent : observa
+```
+
+### Participantes:
+
+| Rol | Clase |
+|---|---|
+| Subject (publicador) | `ContactoService`, `AsignacionService`, `InconformidadService`, `RecepcionService` |
+| Evento | `ContactoRegistradoEvent`, `AsignacionRegistradaEvent`, `InconformidadRegistradaEvent`, `RecepcionConfirmadaEvent` |
+| Observer | `RecepcionConfirmadaListener` (HU-11 lo reemplazará por la liberación del pago) |
+
+### Relación con el backlog y pruebas:
+
+- **Tarea:** T9.1 (`RecepcionConfirmadaEvent`), T9.2 (`RecepcionService`), HU-09.
+- **Pruebas (JUnit 5):** `RecepcionServiceTest` verifica con `ArgumentCaptor` que
+  el evento se publica con pedido, comprador, agricultor y fecha, y que no se
+  publica cuando la confirmación falla.
+- **Evolución:** HU-11 agrega un listener de `RecepcionConfirmadaEvent` sin
+  cambios en `RecepcionService`.
