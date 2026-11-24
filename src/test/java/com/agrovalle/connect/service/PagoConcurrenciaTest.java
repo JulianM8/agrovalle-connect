@@ -45,7 +45,7 @@ import org.springframework.test.context.ActiveProfiles;
  * peticiones de pago a la vez contra PagoService y verifica que no se pierdan
  * ni se dupliquen pagos.
  */
-@SpringBootTest
+@SpringBootTest(properties = "spring.datasource.url=jdbc:h2:mem:pago-concurrencia;DB_CLOSE_DELAY=-1")
 @ActiveProfiles("test")
 class PagoConcurrenciaTest {
 
