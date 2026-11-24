@@ -255,7 +255,7 @@ CREATE TABLE IF NOT EXISTS inconformidades (
     CONSTRAINT fk_inconformidades_pedido FOREIGN KEY (pedido_id)
         REFERENCES pedidos (id),
     CONSTRAINT ck_inconformidades_estado CHECK (estado IN (
-        'ABIERTA', 'EN_REVISION', 'RESUELTA'))
+        'EN_REVISION', 'RESUELTA', 'RECHAZADA'))
 );
 
 -- ---------------------------------------------------------------------
