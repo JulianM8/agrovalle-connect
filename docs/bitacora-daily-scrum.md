@@ -7,7 +7,7 @@ Duración máxima: 15 minutos.
 
 ---
 
-## Daily — Domingo 27 de septiembre de 2026
+### Daily — Domingo 27 de septiembre de 2026
 *(Arranque de HU-01; inicio en paralelo de las primeras tareas de HU-02)*
 
 **Julian Mina (Scrum Master)**
@@ -32,7 +32,7 @@ Duración máxima: 15 minutos.
 
 ---
 
-## Daily — Lunes 28 de septiembre de 2026
+### Daily — Lunes 28 de septiembre de 2026
 *(HU-01 avanza hacia su cierre; HU-02 continúa en paralelo con T2.3 y T2.4)*
 
 **Julian Mina (Scrum Master)**
@@ -59,7 +59,7 @@ Duración máxima: 15 minutos.
 
 ---
 
-## Daily — Martes 29 de septiembre de 2026
+### Daily — Martes 29 de septiembre de 2026
 *(Cierre de HU-01; HU-02 entra en su fase final: controlador y pruebas)*
 
 **Julian Mina (Scrum Master)**
@@ -79,7 +79,7 @@ Duración máxima: 15 minutos.
 
 ---
 
-## Daily — (Mismo martes 29 de septiembre de 2026, continuación)
+### Daily — (Mismo martes 29 de septiembre de 2026, continuación)
 *(Con HU-01 y HU-02 cerradas, HU-04 inicia su desarrollo el mismo dia)*
 
 **Josué Mindineros (Backend / DevOps)**
@@ -94,13 +94,13 @@ Además, cargué datos de prueba mediante `data.sql` y desarrollé pruebas unita
 
 ---
 
-## Daily — Miércoles 30 de septiembre de 2026
+### Daily — Miércoles 30 de septiembre de 2026
 
 cierre de de documentacion, verificacion de evidencias y revision de las historias de usuario con sus respectivas tareas para el sprint 1.
 
 ---
 
-## Daily — Jueves 8 de octubre de 2026 (posterior al cierre formal del Sprint 1)
+### Daily — Jueves 8 de octubre de 2026 (posterior al cierre formal del Sprint 1)
 *(Revisión de la decisión de T2.6 y migración a jwt posterior al cierre del sprint)*
 
 
@@ -124,7 +124,7 @@ cierre de de documentacion, verificacion de evidencias y revision de las histori
 # Bitácora de Daily Scrum — Sprint 2 — AgroValle Connect
 
 
-## Daily — Sabado 31 de octubre de 2026
+### Daily — Sabado 31 de octubre de 2026
 
 **Julian Mina (Scrum Master) — prerrequisitos (registro de comprador y roles)**
 
@@ -133,7 +133,7 @@ cierre de de documentacion, verificacion de evidencias y revision de las histori
 - **Impedimentos:** No se reportaron impedimentos para implementar el registro de comprador, porque se tomó como base la estructura existente de agricultor.
 - **Hallazgo adicional:** Durante el trabajo se detectó que `AgricultorService` no validaba la contraseña al reutilizar una cuenta existente. Se corrigió este problema y se ajustaron sus pruebas para evitar que alguien pudiera agregar un rol a una cuenta ajena con solo conocer su identificación.
 
-## Daily — Lunes 2 de noviembre de 2026
+### Daily — Lunes 2 de noviembre de 2026
 
 **Yenni Obando (QA / Documentador) — HU-10 Pagos en línea (T10.1–T10.11)**
 
@@ -144,12 +144,12 @@ cierre de de documentacion, verificacion de evidencias y revision de las histori
 
 ---
 
-## Daily — Martes 3 de noviembre de 2026
+### Daily — Martes 3 de noviembre de 2026
 
 **Lesly Quintero (Product Owner) — HU-13 Cancelación del pedido (T13.1–T13.5)**
 
 - **Ayer:** Implementó `PedidoService.cancelar`, permitiendo cancelar pedidos en estado `PENDIENTE` o `CONFIRMADO`, guardar el motivo y cambiar el estado a `CANCELADO`. Validó que el pedido perteneciera al comprador autenticado y agregó el listado de pedidos del agricultor. Implementó el reembolso de pagos completados, expuso `POST /api/v1/pedidos/{id}/cancelacion` para el rol `COMPRADOR` y registró las excepciones de pedido inválido y recurso no encontrado en `GlobalExceptionHandler`. También escribió pruebas JUnit 5 y MockMvc para los escenarios de cancelación, reembolso, validaciones, roles y autenticación.
-- **Hoy:** Ejecutar `mvnw verify` completo con JaCoCo y Checkstyle, corregir los errores que aparezcan, hacer `git pull origin develop`, subir los cuatro commits semánticos a la rama `feature/HU-13-cancelacion-pedido` y abrir el Pull Request hacia `develop` para solicitar revisión.
+- **Hoy:** Ejecutar `mvnw verify` completo con JaCoCo y Checkstyle, corregir los errores que aparezcan, hacer `git pull origin develop`, subir los cuatro commits semánticos a la rama `feature/HU13-cancelacion-pedido` y abrir el Pull Request hacia `develop` para solicitar revisión.
 - **Impedimentos:** El código todavía no se había compilado ni probado en su máquina, por lo que estaba pendiente confirmar el resultado de `mvnw verify`. Las tareas de cancelación y reembolso están acopladas y requieren acordar el orden de integración con el equipo. El cambio en el constructor de `PedidoService` obligó a actualizar sus pruebas.
 ---
 
@@ -162,7 +162,7 @@ cierre de de documentacion, verificacion de evidencias y revision de las histori
 
 ---
 
-## Daily — Miércoles 4 de noviembre de 2026
+### Daily — Miércoles 4 de noviembre de 2026
 
 cierre de de documentacion, verificacion de evidencias y revision de las historias de usuario con sus respectivas tareas para el sprint 2.
 
@@ -170,17 +170,17 @@ cierre de de documentacion, verificacion de evidencias y revision de las histori
 # Bitácora de Daily Scrum — Sprint 3 — AgroValle Connect
 
 
-## Daily — Viernes 13 de noviembre de 2026 
+### Daily — Viernes 13 de noviembre de 2026 
 
 **Julian Mina (Scrum Master) — Despliegue continuo a Staging**
 
 - **Ayer:** Creó la base `agrovalle_staging` en Neon, Convirtió la cadena de Neon a formato JDBC, creó `application-staging.yml` con variables de entorno (T03.1), registró los secretos en GitHub Secrets (T03.2) y configuró `.github/workflows/cd.yml` con los jobs `verify-and-test` y `deploy-to-staging` (T03.3), dejando solo `./mvnw clean verify` porque ya incluye JaCoCo. Agregó un `Dockerfile` multietapa y `.dockerignore`, creó el servicio en Render y lo conectó a Neon. Implementó `GET /api/v1/estado` con su prueba y habilitó en `SecurityConfig` el acceso público a `/api/v1/estado` y `/actuator/health` (T03.5). Redactó el ADR-001 (T03.4) y el borrador de `docs/sprint-3-review.md`.
-- **Hoy:** Correr `.\mvnw.cmd verify`, hacer el merge del PR y confirmar que el job `deploy-to-staging` dispara el despliegue en Render, probar `GET /api/v1/estado` y `POST /api/v1/auth/register` en la URL pública y tomar capturas, rotar la contraseña del rol de Neon (actualizando GitHub y Render), completar `docs/sprint-3-review.md` y mover T03.1–T03.5 a Done.
+- **Hoy:** Correr `.\mvnw.cmd verify`, hacer el merge del PR y confirmar que el job `deploy-to-staging` dispara el despliegue en Render, probar `GET /api/v1/estado` y `POST /api/v1/auth/register` en la URL pública y tomar capturas, rotar la contraseña del rol de Neon (actualizando GitHub y Render), completar `docs/sprints/sprint-3/review.md` y mover T03.1–T03.5 a Done.
 - **Impedimentos:** El primer arranque en Render falló con "Connection to localhost:5432 refused" por no tener activo el perfil `staging`; se resolvió agregando `SPRING_PROFILES_ACTIVE=staging`. A tener en cuenta: el plan gratuito de Render y Neon se duerme por inactividad y la primera petición puede tardar uno o dos minutos. 
 
 ---
 
-## Daily —  sábado 14 de noviembre de 2026
+### Daily —  sábado 14 de noviembre de 2026
 
 **Julian Mina (Scrum Master) — prerrequisitos (registro de transportista, T0.6–T0.9)**
 
@@ -190,27 +190,69 @@ cierre de de documentacion, verificacion de evidencias y revision de las histori
 
 ---
 
-## Daily — sábado 14 de noviembre de 2026
+### Daily — sábado 14 de noviembre de 2026
 
 **Julian Mina (Scrum Master) — HU-06 Asignación de vehículo de transporte (T6.1–T6.9)**
 
 - **Ayer:** Creó las entidades `Vehiculo` (tipo de transporte, placa única, capacidad en kg, `@OneToOne` con `Transportista`), `Ruta` (fecha y vehículo, única por vehículo y fecha) y `AsignacionTransporte` (pedido único, ruta, orden de entrega y fecha de asignación), y sus repositorios. Expuso `POST /api/v1/vehiculos` para `ROLE_TRANSPORTISTA` (respuestas 201, 400 y 409) y `GET /api/v1/vehiculos?tipoTransporte=` para `ROLE_AGRICULTOR`, creando `ConflictoException` y registrándola en `GlobalExceptionHandler`. Implementó `DespachoService.asignarVehiculo` (valida agricultor dueño del pedido, sin asignación previa, estado `CONFIRMADO` y vehículo existente; busca o crea la ruta, asigna el siguiente orden y pasa el pedido a `EN_TRANSPORTE`) y `POST /api/v1/pedidos/{id}/asignacion` en un `DespachoController` separado. Agregó `AsignacionRegistradaEvent` y `GET /api/v1/pedidos/{id}/transporte` para el comprador. Escribió las pruebas JUnit 5, MockMvc y Mockito (`VehiculoControllerTest`, `DespachoControllerTest`, `DespachoServiceTest`, `VehiculoServiceTest`).
-- **Hoy:** Ejecutar `.\mvnw.cmd verify` completo, subir la rama `feature/HU06-asignacion-vehiculo` y abrir el Pull Request hacia `develop`; mover T6.1–T6.9 a Done.
+- **Hoy:** Ejecutar `.\mvnw verify` completo, subir la rama `feature/HU06-asignacion-vehiculo` y abrir el Pull Request hacia `develop`; mover T6.1–T6.9 a Done.
 - **Impedimentos:** No existía una excepción para el 409 (se creó `ConflictoException`). T6.5 y T6.8 modifican archivos de T6.4 y T6.6, por lo que hubo que elegir con cuidado los archivos de cada commit. Las pruebas quedaron en un commit aparte (T6.9).
 
 ---
 
-## Daily — sábado 14 de noviembre de 2026
+### Daily — sábado 14 de noviembre de 2026
 
 **Yenni Obando (QA / Documentador) — HU-07 Programación de rutas de despacho (T7.1–T7.7)**
 
 - **Ayer:** Creó los DTOs `RutaDiaResponse` y `ParadaRutaResponse` (T7.1) e implementó el patrón Strategy `OrdenEntregaStrategy` con `PorMunicipioStrategy` y `VecinoMasCercanoStrategy` (distancia de Haversine; los compradores sin coordenadas van al final) (T7.2). Documentó el patrón en `docs/diseno/patrones.md` con el diagrama de clases en Mermaid (T7.6). Implementó `RutaService.consultarRutaDelDia` (solo lectura, sin modificar `orden_entrega`), `VehiculoRepository.findByTransportistaUsuarioId` y `CriterioOrdenInvalidoException` (T7.3), expuso `GET /api/v1/rutas?fecha=&criterio=` para `ROLE_TRANSPORTISTA` con 200, 400 y 404 (T7.4), cargó datos de prueba en `data.sql` (T7.5) y escribió las pruebas JUnit 5, MockMvc y Mockito (200 con paradas ordenadas, cada estrategia, sin coordenadas al final, 404, 400 y 403) (T7.7).
-- **Hoy:** Ejecutar `.\mvnw.cmd verify` completo, abrir el Pull Request de `feature/HU07-rutas-despacho` hacia `develop`, pedir revisión y mover T7.1–T7.7 a Done.
+- **Hoy:** Ejecutar `.\mvnw verify` completo, abrir el Pull Request de `feature/HU07-rutas-despacho` hacia `develop`, pedir revisión y mover T7.1–T7.7 a Done.
 - **Impedimentos:** Ninguno reportado; se realizo con una buena base teniendo en cuenta hu-06 y la estructura del proyecto. 
 
-## Daily — domingo 15/Lunes 16 de noviembre de 2026
+### Daily — domingo 15/Lunes 16 de noviembre de 2026
 
-Cierre de documentación, verificación de evidencias (capturas de Staging, `docs/sprint-3-review.md`) y revisión de las historias de usuario con sus respectivas tareas para el Sprint 3.
+Cierre de documentación, verificación de evidencias (capturas de Staging, `docs/sprints/sprint-3/review.md`) y revisión de las historias de usuario con sus respectivas tareas para el Sprint 3.
+
+
+# Bitácora de Daily Scrum — Sprint 4 — AgroValle Connect
+
+
+### Daily — Lunes 23 de noviembre de 2026
+
+**Julian Mina (Scrum Master) y Lesly Quintero (Product Owner) — HU-08 Seguimiento del envío (T8.1–T8.5)**
+
+- **Ayer:** Julian creó el DTO `SeguimientoResponse` (T8.1) y ajustó `DespachoService.asignarVehiculo` para guardar la fecha estimada de llegada del pedido con la fecha de la ruta cuando el pedido no la tiene, con dos pruebas nuevas (T8.2). Implementó `PedidoService.consultarSeguimiento`, que reutiliza `obtenerPedidoDelComprador` y devuelve el estado y la fecha estimada, o un mensaje cuando aún no hay fecha (T8.3). Expuso `GET /api/v1/pedidos/{id}/seguimiento` para `ROLE_COMPRADOR` con 200 y 404, sin cambiar el constructor de `PedidoController` (T8.4). Escribió las pruebas JUnit 5, MockMvc y Mockito (200 con estado y fecha, mensaje sin fecha, 404 de pedido ajeno y 403 sin rol) dentro de los mismos commits de T8.3 y T8.4 (T8.5). Lesly gestionó el tablero, revisó y aceptó los cambios y colaboró en el código.
+- **Hoy:** Ejecutar `.\mvnw verify` completo, hacer `git pull origin develop`, subir la rama `feature/HU08-seguimiento-envio`, abrir el Pull Request hacia `develop` y mover T8.1–T8.5 a Done. Probar el endpoint en Postman.
+- **Impedimentos:** Ninguno bloqueante. La fecha estimada de llegada no se llenaba en ninguna parte del sistema, por lo que hubo que modificar código de HU-06 dentro de esta historia.
+
+---
+
+**Josué Mindineros (Backend / DevOps) — HU-15 Reporte de inconformidad o producto dañado (T15.1–T15.7)**
+
+- **Ayer:** Antes de iniciar revisó la arquitectura, el flujo de Git y el esquema de PostgreSQL.
+- **Hoy:** Implementó la entidad y el repositorio de la inconformidad, alineó los estados del SQL, agregó los DTOs y el servicio de registro, y expuso `POST` y `GET` para el comprador dueño del pedido. Publicó el evento de registro y completó las pruebas de controlador, servicio e integración. Reutilizó el bloqueo de pedidos, las excepciones y el patrón de eventos del proyecto.
+- **Impedimentos:**
+  - El CI del PR #217 falló dos veces en `ProductoRepositoryTest`: esa prueba crea un producto "Aguacate" y espera que sea el único resultado de Palmira y Frutas, pero `PagoConcurrenciaTest` corrió primero y dejó dos Aguacates en la misma H2, por lo que el filtro devolvió tres. Se resolvió en el PR #218, dándole a `PagoConcurrenciaTest` su propia base H2 en memoria.
+  - Checkstyle detectó una línea en blanco faltante entre los campos del servicio; se corrigió y se repitió la verificación.
+  - **Cierre:** T15.1–T15.7 integradas en `develop`. El PR final #221 pasó el CI. La prueba contra PostgreSQL en la rama de pruebas de Neon terminó con `BUILD SUCCESS` (1 prueba, 0 fallos, 0 errores, 0 omitidas) y confirmó que la inconformidad se registra y se consulta, y que los datos del pago se conservan.
+
+---
+
+## Daily — Martes 24 de noviembre de 2026
+
+**Yenni Obando (QA / Documentador) — HU-09 Confirmación de recepción de la mercancía (T9.1–T9.5)**
+
+- **Ayer:** Implementó `RecepcionConfirmadaEvent`, `RecepcionService.confirmarRecepcion` y `RecepcionController` (`POST /api/v1/pedidos/{id}/recepcion`), con las pruebas de servicio y de controlador (T9.1–T9.4). La recepción valida que el pedido sea del comprador, que no esté ya entregado (409), que esté `EN_TRANSPORTE` (400) y que no tenga una inconformidad en revisión (409); luego guarda el pedido `ENTREGADO` con su `fecha_entrega` y publica el evento. Usa un bloqueo pesimista (`findByIdParaActualizar`) para evitar confirmaciones concurrentes. El observador `RecepcionConfirmadaListener` se ejecuta después del commit y por ahora solo deja una traza en el log. `./mvnw verify` pasa correctamente.
+- **Hoy:** Terminar T9.5 (documentar el patrón Observer y el diagrama de colaboración en `docs/diseno/`), actualizar la rama con `develop`, subir los cambios y abrir el Pull Request hacia `develop` para revisión.
+- **Impedimentos:**
+  - Checkstyle falló por `EmptyLineSeparator` en `RecepcionService` (campos sin línea en blanco entre ellos); se corrigió.
+  - `Failed to load ApplicationContext` en `RecepcionControllerTest` por no activar el perfil `test`; se corrigió con `@ActiveProfiles("test")`.
+  - `RecepcionControllerTest.java` quedó sin `git add` y no se había subido.
+
+---
+
+## Daily — Miércoles 25 de noviembre de 2026
+
+Cierre de documentación, verificación de evidencias (capturas de Postman, `docs/sprints/sprint-4/review.md`) y revisión de las historias de usuario con sus respectivas tareas para el Sprint 4.
 
 
 
