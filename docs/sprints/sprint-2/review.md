@@ -83,7 +83,7 @@ Se realizará una demostración en Postman de las historias de usuario trabajada
 - Repositorio: `github.com/JulianM8/agrovalle-connect`
 - Tablero Kanban: proyecto "AgroValle Connect" (GitHub Projects), vista "Sprint 2"
 - Sprint Backlog: `product_backlog_bdd.md` en `docs/requirements/`
-- Planificación técnica: `docs/sprint-2-planning.md`
+- Planificación técnica: `docs/sprints/sprint-2/planning.md`
 
 **Video del tablero kanban demostrando el cierre de todas las tareas comprometidas y las ramas creadas:**
 [Ver demostracion](https://drive.google.com/file/d/1bHjR8FMBtlb0WUvxBdS4tJFZuYxgvqOh/view?usp=sharing)
@@ -92,27 +92,27 @@ Se realizará una demostración en Postman de las historias de usuario trabajada
 
 **Tablero General**
 
-![alt text](multimedia/image-6.png)
+![alt text](../../multimedia/image-6.png)
 
 **Flujo en Prerrequisitos (Comprador y Roles)**
 
-![alt text](multimedia/image-11.png)
+![alt text](../../multimedia/image-11.png)
 
 **Flujo en HU-10**
 
-![alt text](multimedia/image-7.png)
+![alt text](../../multimedia/image-7.png)
 
 **Flujo en HU-13**
 
-![alt text](multimedia/image-8.png)
+![alt text](../../multimedia/image-8.png)
 
 **Flujo en HU-05**
 
-![alt text](multimedia/image-9.png)
+![alt text](../../multimedia/image-9.png)
 
 **Evidencia de historias de usuarios terminadas con sus tareas**
 
-![alt text](multimedia/image-10.png)
+![alt text](../../multimedia/image-10.png)
 
 ## Integracion continua CI
 
@@ -121,7 +121,7 @@ En esta parte de la integracion continua se evidencia la ejecucion de las prueba
 Nosotros decidimos implememtar la integracion continua a finales del sprint 1 por medio de la documentacion que se nos fue proporcionada que hablaba sobre las proximas entregas y como implementar ciertas cosas, a continuacion se muestra la evidencia de la integracion continua en GitHub Actions mostrando el build en verde y algunos tambien en rojo.
 
 **Evidencia de la integracion continua en GitHub Actions**
-![alt text](multimedia/image-12.png)
+![alt text](../../multimedia/image-12.png)
 
 **Video mostrando algunos builds que fueron ejecutados:**
 [Ver demostracion](https://drive.google.com/file/d/1Zk_CC0sL4RgNMnwPm5_6IEeqdCiztj0Z/view?usp=drive_link)

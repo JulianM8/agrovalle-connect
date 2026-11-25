@@ -17,7 +17,7 @@ Antes de entregar AgroValle Connect hace falta definir cómo se publica una vers
 * los datos y las credenciales de producción estén aislados de los de pruebas;
 * la actualización cause la menor interrupción posible del servicio.
 
-Restricciones: equipo de cuatro personas sin personal de operaciones, presupuesto mínimo, una plataforma (Render) que no permite repartir el tráfico por porcentaje entre versiones, y un esquema de base de datos que hoy se mantiene a mano con `src/main/resources/schema.sql`, sin herramienta de migraciones.
+Restricciones: equipo de cuatro personas sin personal de operaciones, presupuesto mínimo, una plataforma (Render) que no permite repartir el tráfico por porcentaje entre versiones, y un esquema de base de datos que hoy se mantiene a mano con `src/main/resources/db/migration/schema.sql`, sin herramienta de migraciones.
 
 ## Opciones Consideradas
 

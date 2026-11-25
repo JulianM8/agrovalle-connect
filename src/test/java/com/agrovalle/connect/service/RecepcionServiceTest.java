@@ -18,6 +18,7 @@ import com.agrovalle.connect.exception.RecursoNoEncontradoException;
 import com.agrovalle.connect.model.Agricultor;
 import com.agrovalle.connect.model.Comprador;
 import com.agrovalle.connect.model.Pedido;
+import com.agrovalle.connect.model.Usuario;
 import com.agrovalle.connect.model.enums.EstadoInconformidad;
 import com.agrovalle.connect.model.enums.EstadoPedido;
 import com.agrovalle.connect.repository.InconformidadRepository;
@@ -46,17 +47,22 @@ class RecepcionServiceTest {
 
   private Pedido pedido;
 
-  @BeforeEach
-  void prepararPedido() {
+@BeforeEach
+void prepararPedido() {
     Comprador comprador = mock(Comprador.class);
     Agricultor agricultor = mock(Agricultor.class);
+    Usuario usuario = mock(Usuario.class);
+
     lenient().when(comprador.getId()).thenReturn(COMPRADOR_ID);
+    lenient().when(comprador.getUsuario()).thenReturn(usuario);
+    lenient().when(usuario.getId()).thenReturn(COMPRADOR_ID);
+
     pedido = new Pedido();
     pedido.setId(PEDIDO_ID);
     pedido.setComprador(comprador);
     pedido.setAgricultor(agricultor);
     pedido.setEstado(EstadoPedido.EN_TRANSPORTE);
-  }
+}
 
   @Test
   void confirmaRecepcionYDejaElPedidoEntregado() {

@@ -36,7 +36,6 @@ El equipo trabajó en el Sprint 3 con dos historias de usuario (HU-06 Asignació
 | Incluir las pruebas en el mismo commit que el código de cada tarea | Todo el equipo | Cada commit de tarea trae su test |
 | Al planificar, listar las excepciones nuevas y sus códigos HTTP (por ejemplo 409) antes de empezar los endpoints, y revisar `GlobalExceptionHandler` al crear una excepción | Quien implementa | Handler registrado y prueba de 400 y 404 en cada endpoint |
 | Actualizar `schema.sql` y la base de staging en la misma historia que crea las tablas | Quien crea la entidad | Tablas presentes en staging antes de desplegar el sprint |
-| Hacer `git pull --rebase` al empezar cada tarea y antes de cada push; avisar en el daily antes de subir a una rama compartida | Todo el equipo | Cero push rechazados |
 | Usar `git add` con rutas específicas y revisar `git status` antes de cada commit; ejecutar los comandos en líneas separadas en PowerShell | Todo el equipo | Ningún archivo ajeno o de otra tarea en los commits; sin comandos pegados |
 | Correr `mvnw verify` completo (sin saltar JaCoCo) antes de abrir cada PR | Todo el equipo | CI en verde al abrir el PR |
 | Revisar las variables de entorno de la PaaS contra `application-staging.yml` antes del primer despliegue | Quien despliega | El log muestra "The following 1 profile is active: staging" |

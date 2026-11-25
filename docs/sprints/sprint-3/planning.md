@@ -68,7 +68,7 @@ Trabajo de soporte que habilita las tareas anteriores:
 
 | Actividad | Descripción |
 |---|---|
-| Base de datos de Staging | Crear la base `agrovalle_staging` en Neon y ejecutar `docs/diseno/schema.sql`, verificando las tablas con `information_schema.tables` |
+| Base de datos de Staging | Crear la base `agrovalle_staging` en Neon y ejecutar `src/main/resources/db/migration/schema.sql`, verificando las tablas con `information_schema.tables` |
 | Empaquetado con Docker | `Dockerfile` multietapa (JDK 17 para compilar, JRE 17 para ejecutar) y `.dockerignore` en la raíz del repositorio, requeridos por Render para ejecutar Java |
 | Servicio web en Render | Crear el servicio conectado a Neon, con las variables de entorno del perfil `staging` y el Deploy Hook que usa `cd.yml` |
 | Endpoint de estado y seguridad | `GET /api/v1/estado` (`EstadoController`, con su `EstadoControllerTest`) y regla en `SecurityConfig` que permite sin token solo ese endpoint y `/actuator/health` |

@@ -292,26 +292,3 @@ Estos patrones también están presentes, pero no pertenecen al catálogo GoF.
   `FechaCosechaInvalidaException`, `IdentificacionDuplicada...`,
   `CorreoDuplicadoException`) a respuestas HTTP coherentes, para que los
   servicios no dependan de HTTP.
-
-## 6. Estructura del repositorio y pruebas
-
-```
-src/
-├── main/
-│   ├── java/com/agrovalle/connect/
-│   │   ├── config/        (SecurityConfig, JwtAuthenticationFilter)
-│   │   ├── controller/    (AgricultorController, ProductoController)
-│   │   ├── dto/           (requests y responses)
-│   │   ├── exception/     (excepciones de dominio + GlobalExceptionHandler)
-│   │   ├── model/         (Usuario, Agricultor, Producto)
-│   │   ├── repository/    (UsuarioRepository, AgricultorRepository, ProductoRepository)
-│   │   ├── service/       (AgricultorService, AuthService, JwtService, ProductoService)
-│   │   └── AgrovalleConnectApplication.java
-│   └── resources/         (application.properties, application-demo.properties, data.sql)
-└── test/
-    └── java/com/agrovalle/connect/
-        ├── controller/    (AgricultorControllerTest, ProductoControllerTest)
-        ├── repository/    (ProductoRepositoryTest)
-        ├── service/       (AgricultorServiceTest, AuthServiceTest, ProductoServiceTest)
-        └── AgrovalleConnectApplicationTests.java
-```
