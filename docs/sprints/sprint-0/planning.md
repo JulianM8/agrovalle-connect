@@ -10,7 +10,7 @@ Configurar la infraestructura base del proyecto en Java 17 / Spring Boot, establ
 1. Creación e inicialización del repositorio central en GitHub.
 2. Definición de la Declaración de la Visión del Producto y estrategia Git (Mermaid) en el `README.md`.
 3. Configuración del proyecto base Spring Boot en Java 17 y estructura Maven (`pom.xml`).
-4. Configuración del `.gitignore` y regla de linter estático (`checkstyle.xml`).
+4. Configuración del `.gitignore` y regla de linter estático (`src/main/resources/checkstyle.xml`).
 5. Automatización de pre-commit hooks con Husky (`.husky/pre-commit`).
 6. Definición y firma del contrato técnico Definition of Done (`docs/dod.md`).
 7. Construcción del Product Backlog de 15 Historias de Usuario con escenarios BDD en `BACKLOG.md` (referenciado en `docs/requirements/product-backlog-bdd.md`).

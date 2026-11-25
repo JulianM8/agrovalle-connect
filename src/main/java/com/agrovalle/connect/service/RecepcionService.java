@@ -49,7 +49,7 @@ public class RecepcionService {
   public RecepcionResponse confirmarRecepcion(Long pedidoId, Long usuarioId) {
     // 404 tanto si no existe como si es de otro comprador (no revela su existencia)
     Pedido pedido = pedidoRepository.findByIdParaActualizar(pedidoId)
-        .filter(p -> p.getComprador().getId().equals(usuarioId))
+        .filter(p -> p.getComprador().getUsuario().getId().equals(usuarioId))
         .orElseThrow(() -> new RecursoNoEncontradoException("Pedido no encontrado."));
 
     if (pedido.getEstado() == EstadoPedido.ENTREGADO) {
