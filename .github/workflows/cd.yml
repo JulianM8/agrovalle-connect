@@ -3,6 +3,7 @@ name: Continuous Deployment (CD) - Staging Pipeline
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   verify-and-test:
@@ -33,5 +34,21 @@ jobs:
 
     steps:
       - name: Trigger Staging Deployment Webhook
+        env:
+          DEPLOY_HOOK_URL: ${{ secrets.DEPLOY_HOOK_URL }}
         run: |
           echo "Ejecutando despliegue automatico a ambiente Staging..."
+          curl --fail --silent --show-error -X POST "$DEPLOY_HOOK_URL"
+          echo "Despliegue solicitado a Render"
+
+      - name: Verificar salud del servicio (Healthcheck)
+        env:
+          STAGING_URL: https://agrovalle-connect-5vhc.onrender.com
+        run: |
+          echo "Esperando a que Staging responda..."
+          sleep 60
+          curl --fail --silent --show-error \
+            --retry 20 --retry-delay 15 --retry-all-errors \
+            "$STAGING_URL/api/v1/estado"
+          echo ""
+          echo "Staging responde HTTP 200 OK"

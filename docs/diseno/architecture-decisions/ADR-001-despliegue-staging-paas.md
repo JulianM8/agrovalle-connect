@@ -35,7 +35,7 @@ Se aprueba la **Opción 2: Plataforma PaaS junto a GitHub Actions**, con la sigu
 **Flujo de despliegue:**
 
 1. Cada integración a la rama `main` activa el workflow `.github/workflows/cd.yml`.
-2. El job `verify-and-test` compila el proyecto y ejecuta `./mvnw clean verify` (Checkstyle, pruebas unitarias y cobertura JaCoCo >= 60%).
+2. El job `verify-and-test` compila el proyecto y ejecuta `./mvnw -B clean verify` (Checkstyle, pruebas unitarias y cobertura JaCoCo >= 60%).
 3. El job `deploy-to-staging`, condicionado con `needs: verify-and-test`, solo se ejecuta si el job anterior fue exitoso e invoca el Deploy Hook de Render mediante una petición HTTP POST.
 4. Render reconstruye la imagen con el `Dockerfile` del repositorio y reinicia el servicio ejecutándolo con el perfil `application-staging.yml`.
 
