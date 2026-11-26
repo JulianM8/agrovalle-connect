@@ -5,10 +5,12 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import com.agrovalle.connect.config.SecurityConfig;
 import com.agrovalle.connect.dto.CancelacionRequest;
 import com.agrovalle.connect.dto.CancelacionResponse;
+import com.agrovalle.connect.dto.SeguimientoResponse;
 import com.agrovalle.connect.exception.GlobalExceptionHandler;
 import com.agrovalle.connect.exception.PedidoInvalidoException;
 import com.agrovalle.connect.exception.RecursoNoEncontradoException;
@@ -17,6 +19,8 @@ import com.agrovalle.connect.service.JwtService;
 import com.agrovalle.connect.service.PagoService;
 import com.agrovalle.connect.service.PedidoService;
 import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,6 +129,40 @@ class PedidoControllerTest {
     mockMvc.perform(post(URL)
         .contentType(MediaType.APPLICATION_JSON)
         .content(cuerpo("Motivo")))
+        .andExpect(status().isForbidden());
+  }
+
+  private static final String URL_SEGUIMIENTO = "/api/v1/pedidos/100/seguimiento";
+
+  @Test
+  void debeMostrarEstadoYFechaEstimadaDelPedido() throws Exception {
+    when(pedidoService.consultarSeguimiento(100L, 5L))
+        .thenReturn(new SeguimientoResponse(100L, EstadoPedido.EN_TRANSPORTE,
+            LocalDateTime.of(2026, 11, 20, 9, 0), LocalDate.of(2026, 11, 25), null,
+            "Tu pedido va en camino"));
+
+    mockMvc.perform(get(URL_SEGUIMIENTO)
+        .header("Authorization", "Bearer token-comprador"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.estado").value("EN_TRANSPORTE"))
+        .andExpect(jsonPath("$.fechaEstimadaLlegada").exists())
+        .andExpect(jsonPath("$.mensaje").value("Tu pedido va en camino"));
+  }
+
+  @Test
+  void debeResponder404SiElSeguimientoEsDePedidoAjeno() throws Exception {
+    when(pedidoService.consultarSeguimiento(100L, 5L))
+        .thenThrow(new RecursoNoEncontradoException("No existe el pedido con id 100"));
+
+    mockMvc.perform(get(URL_SEGUIMIENTO)
+        .header("Authorization", "Bearer token-comprador"))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  void debeRechazarSeguimientoSinRolComprador() throws Exception {
+    mockMvc.perform(get(URL_SEGUIMIENTO)
+        .header("Authorization", "Bearer token-agricultor"))
         .andExpect(status().isForbidden());
   }
 }

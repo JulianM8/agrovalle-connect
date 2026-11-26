@@ -9,6 +9,7 @@ import com.agrovalle.connect.service.PedidoService;
 import com.agrovalle.connect.dto.CancelacionRequest;
 import com.agrovalle.connect.dto.CancelacionResponse;
 import com.agrovalle.connect.dto.PedidoAgricultorResponse;
+import com.agrovalle.connect.dto.SeguimientoResponse;
 import java.util.List;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -72,10 +73,12 @@ public class PedidoController {
     Long usuarioId = (Long) authentication.getPrincipal();
     return ResponseEntity.ok(pagoService.consultar(id, usuarioId));
   }
-    /**
-   * Cancela un pedido del comprador autenticado (200, 400 si no es cancelable, 404).
+
+  /**
+   * Cancela un pedido del comprador autenticado (200, 400 si no es cancelable,
+   * 404).
    */
-  
+
   @PostMapping("/{id}/cancelacion")
   @PreAuthorize("hasRole('COMPRADOR')")
   public ResponseEntity<CancelacionResponse> cancelar(@PathVariable("id") Long id,
@@ -85,7 +88,8 @@ public class PedidoController {
   }
 
   /**
-   * Lista los pedidos del agricultor autenticado, con estado y motivo de cancelación.
+   * Lista los pedidos del agricultor autenticado, con estado y motivo de
+   * cancelación.
    */
   @GetMapping
   @PreAuthorize("hasRole('AGRICULTOR')")
@@ -93,5 +97,17 @@ public class PedidoController {
       Authentication authentication) {
     Long usuarioId = (Long) authentication.getPrincipal();
     return ResponseEntity.ok(pedidoService.listarDelAgricultor(usuarioId));
+  }
+
+  /**
+   * Consulta el estado y la fecha estimada de llegada de un pedido del comprador
+   * autenticado (200, 404 si no existe o es de otro comprador).
+   */
+  @GetMapping("/{id}/seguimiento")
+  @PreAuthorize("hasRole('COMPRADOR')")
+  public ResponseEntity<SeguimientoResponse> consultarSeguimiento(
+      @PathVariable("id") Long id, Authentication authentication) {
+    Long usuarioId = (Long) authentication.getPrincipal();
+    return ResponseEntity.ok(pedidoService.consultarSeguimiento(id, usuarioId));
   }
 }

@@ -39,7 +39,7 @@ Se realizo una pequeña demostracion en postman de las historias de usuario real
 
 ## 4. Evidencia técnica (calidad)
 
-- **Pipeline de CI (GitHub Actions, `ci.yml`):** ejecuta `./mvnw -B verify` en cada Pull Request hacia `develop`. Verificado en verde tras corregir la conexión inicial a PostgreSQL y una falla temporal de descarga del wrapper de Maven.
+- **Pipeline de CI (GitHub Actions, `ci.yml`):** ejecuta `./mvnw -B clean verify` en cada Pull Request hacia `develop`. Verificado en verde tras corregir la conexión inicial a PostgreSQL y una falla temporal de descarga del wrapper de Maven.
 - **Checkstyle:** 0 violaciones en la última ejecución exitosa, tras corregir 2 líneas superiores a 120 caracteres en `ProductoPublicacionRequest` y una regla de separación de líneas en `ProductoService`.
 - **Cobertura (JaCoCo):** por encima del mínimo de 60 % requerido, alcanzado incorporando pruebas de servicio (`AgricultorServiceTest`, `ProductoServiceTest`), de controlador (`AgricultorControllerTest`, `ProductoControllerTest`) con MockMvc, y de repositorio (`ProductoRepositoryTest`) con `@SpringBootTest` y `@Transactional` sobre H2.
 - **Protección de rama:** `develop` exige que el check `build` de GitHub Actions pase antes de permitir la fusión de cualquier Pull Request.
@@ -51,39 +51,37 @@ Se realizo una pequeña demostracion en postman de las historias de usuario real
 |---|---|---|
 | Ejercicio comparativo IEEE 29148 (requerimiento formal, HU-02: validación de token JWT) | Marcado como pendiente para segundo corte según la guía V2 de la Sesión 4 | Próxima entrega |
 | Autenticación con JWT | Se evaluó junto con T2.6 y se decidió no ampliar el alcance del Sprint 1 (13 pts comprometidos); `agricultorId` cubre la necesidad funcional del sprint | Candidato para un sprint de autenticación |
-| Prueba de controlador para el filtro (`ProductoControllerTest` con `MockMvc` para `GET /api/v1/productos`) | HU-04 quedó cubierta con la prueba de repositorio; falta la prueba a nivel de controlador para completar la trazabilidad BDD de la tabla de `docs/sprint-1-planning.md` | Antes del cierre del Sprint 1, o al inicio del Sprint 2 |
+| Prueba de controlador para el filtro (`ProductoControllerTest` con `MockMvc` para `GET /api/v1/productos`) | HU-04 quedó cubierta con la prueba de repositorio; falta la prueba a nivel de controlador para completar la trazabilidad BDD de la tabla de `docs/sprints/sprint-1/planning.md` | Antes del cierre del Sprint 1, o al inicio del Sprint 2 |
 
 ## 6. Enlaces de referencia
 
 - Repositorio: `github.com/JulianM8/agrovalle-connect`
 - Tablero Kanban: proyecto "AgroValle Connect" (GitHub Projects), vista "Sprint 1"
-- Sprint Backlog: `BACKLOG.md`
-- Planificación técnica: `docs/sprint-1-planning.md`
+- Sprint Backlog: `product_backlog_bdd.md` en `docs/requirements/`
+- Planificación técnica: `docs/sprints/sprint-1/planning.md`
 
 **Video del tablero kanban demostrando el cierre de todas las tareas comprometidas y las ramas creadas:**
 [Ver demostracion](https://drive.google.com/file/d/12Qrevwjfo7QjcfUvhW85BysCWmoRbOZY/view?usp=sharing)
 
-**Video del tablero kanban demostrando las tareas nuevas y el cierre de estas:**
-[Ver demostracion]()
 
 ## Algunas capturas de pantalla del flujo en tablero kanban
 
 **Tablero General**
 
-![alt text](multimedia/image-1.png)
+![alt text](../../multimedia/image-1.png)
 
 **Flujo en HU-01**
 
-![alt text](multimedia/image-2.png)
+![alt text](../../multimedia/image-2.png)
 
 **Flujo en HU-02**
 
-![alt text](multimedia/image-3.png)
+![alt text](../../multimedia/image-3.png)
 
 **Flujo en HU-04**
 
-![alt text](multimedia/image-4.png)
+![alt text](../../multimedia/image-4.png)
 
 **Flujo en las actualizaciones de autenticación JWT**
 
-![alt text](multimedia/image-5.png)
+![alt text](../../multimedia/image-5.png)

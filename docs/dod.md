@@ -5,7 +5,7 @@ El DoD es el **contrato innegociable** que garantiza la integridad de cada incre
 ## Checklist de Cumplimiento Obligatorio
 
 - [✔] **Build Local:** El proyecto compila o transpila sin errores en el entorno local.
-- [✔] **Linter Pass (Modularity/Style):** El código cumple con las reglas estáticas de Checkstyle; cero advertencias, usando `checkstyle.xml` basado en Google Java Style. Esto garantiza el atributo de Mantenibilidad de la norma ISO/IEC 25010.
+- [✔] **Linter Pass (Modularity/Style):** El código cumple con las reglas estáticas de Checkstyle; cero advertencias, usando `src/main/resources/checkstyle.xml` basado en Google Java Style. Esto garantiza el atributo de Mantenibilidad de la norma ISO/IEC 25010.
 - [✔] **Functional Correctness:** El 100% de las pruebas unitarias existentes pasan con éxito.
 - [✔] **Peer Review:** Todo Pull Request ha sido revisado y aprobado por al menos un compañero de equipo después de una revisión de código.
 - [✔] **Documentation:** El `README.md` y la documentación técnica de la carpeta `/docs` están actualizados.

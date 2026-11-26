@@ -68,7 +68,7 @@ Trabajo de soporte que habilita las tareas anteriores:
 
 | Actividad | Descripción |
 |---|---|
-| Base de datos de Staging | Crear la base `agrovalle_staging` en Neon y ejecutar `docs/diseno/schema.sql`, verificando las tablas con `information_schema.tables` |
+| Base de datos de Staging | Crear la base `agrovalle_staging` en Neon y ejecutar `src/main/resources/db/migration/schema.sql`, verificando las tablas con `information_schema.tables` |
 | Empaquetado con Docker | `Dockerfile` multietapa (JDK 17 para compilar, JRE 17 para ejecutar) y `.dockerignore` en la raíz del repositorio, requeridos por Render para ejecutar Java |
 | Servicio web en Render | Crear el servicio conectado a Neon, con las variables de entorno del perfil `staging` y el Deploy Hook que usa `cd.yml` |
 | Endpoint de estado y seguridad | `GET /api/v1/estado` (`EstadoController`, con su `EstadoControllerTest`) y regla en `SecurityConfig` que permite sin token solo ese endpoint y `/actuator/health` |
@@ -133,5 +133,5 @@ Estas pruebas son las que ejecuta el pipeline de GitHub Actions (`ci.yml`) en ca
 - **Tablero:** GitHub Projects — "AgroValle Connect", vista "Sprint 3"
 - **Columnas:** Backlog, To Do, In Progress (WIP 3), Testing, Done
 - **Regla de Testing:** una tarea solo pasa a Testing si tiene un Pull Request abierto hacia `develop` y el pipeline de GitHub Actions reporta *Success* (incluida la cobertura > 60%)
-- **Sprint Backlog detallado:** ver `BACKLOG.md` en la raíz del repositorio
+- **Sprint Backlog detallado:** ver `product_backlog_bdd.md` en `docs/requirements/`, con la trazabilidad de cada historia a sus criterios de aceptación Given-When-Then y a las pruebas unitarias JUnit 5 que los implementan.
 - **Despliegue:** el CI corre en cada Pull Request; el CD (`cd.yml`) corre en cada push a `main` y publica en Staging

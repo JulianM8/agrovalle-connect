@@ -1,8 +1,8 @@
 # ADR-001: Adopción de Plataforma PaaS y GitHub Actions para Despliegue Continuo (CD) en Staging
 
 * **Estado:** Aprobado
-* **Fecha:** 2026-11-12
-* **Autores:** Célula de Desarrollo AgroValle Connect
+* **Fecha:** 12 de noviembre de 2026
+* **Autores:** Julian Mina, Josué Mindineros, Lesly Quintero, Yenni Obando
 * **Contexto Técnico:** Asignatura Ingeniería de Software II - UNIAJC
 
 ## Contexto y Problemática
@@ -29,7 +29,7 @@ Se aprueba la **Opción 2: Plataforma PaaS junto a GitHub Actions**, con la sigu
 |---|---|---|
 | Control de versiones y CI/CD | GitHub y GitHub Actions | Ejecuta las verificaciones de calidad y dispara el despliegue |
 | Aplicación (Staging) | Render (Web Service, plan Free) | Ejecuta el artefacto Spring Boot empaquetado en un contenedor Docker |
-| Base de datos (Staging) | Neon (PostgreSQL), base `agrovalle_staging` | Persistencia del ambiente de pruebas, con el esquema de `docs/diseno/schema.sql` |
+| Base de datos (Staging) | Neon (PostgreSQL), base `agrovalle_staging` | Persistencia del ambiente de pruebas, con el esquema de `src/main/resources/db/migration/schema.sql` |
 | Gestión de secretos | GitHub Secrets y variables de entorno de Render | Inyección de credenciales sin exponerlas en el código |
 
 **Flujo de despliegue:**

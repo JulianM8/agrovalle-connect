@@ -85,40 +85,39 @@ Se realiza la demostración en Postman de las historias del sprint y del ambient
 
 - Repositorio: `github.com/JulianM8/agrovalle-connect`
 - Tablero Kanban: proyecto "AgroValle Connect" (GitHub Projects), vista "Sprint 3"
-- Sprint Backlog: `BACKLOG.md`
-- Planificación técnica: `docs/sprint-3-planning.md`
+- Sprint Backlog: `product_backlog_bdd.md` en `docs/requirements/`
+- Planificación técnica: `docs/sprints/sprint-3/planning.md`
 - Decisión de arquitectura: `docs/architecture-decisions/ADR-001-despliegue-staging-paas.md`
 - Patrones de diseño: `docs/diseno/patrones.md`
-- Esquema de base de datos: `docs/diseno/schema.sql`
+- Esquema de base de datos: `src/main/resources/db/migration/schema.sql`
 
 
 ## Algunas capturas de pantalla del flujo en tablero kanban
 
 **Tablero General**
 
-![alt text](multimedia/image-13.png)
+![alt text](../../multimedia/image-13.png)
 
 **Flujo en HU-06**
 
-![alt text](multimedia/image-14.png)
+![alt text](../../multimedia/image-14.png)
 
 
 **Flujo en HU-07**
 
-![alt text](multimedia/image-15.png)
+![alt text](../../multimedia/image-15.png)
 
 **Flujo en los prerrequisitos del Transportista**
 
-![alt text](multimedia/image-16.png)
+![alt text](../../multimedia/image-16.png)
 
 **Flujo en el Despliegue Continuo (T03.1 a T03.5)**
 
-![alt text](multimedia/image-17.png)
-
+![alt text](../../multimedia/image-17.png)
 
 
 **Respuesta HTTP 200 OK de `/api/v1/estado` y registro en Staging con su fila en Neon**
 
-![alt text](multimedia/image-18.png)
+![alt text](../../multimedia/image-18.png)
 
-![alt text](multimedia/image-19.png)
+![alt text](../../multimedia/image-19.png)
