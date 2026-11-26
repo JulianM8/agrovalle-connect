@@ -5,11 +5,11 @@ El DoD es el **contrato innegociable** que garantiza la integridad de cada incre
 ## Checklist de Cumplimiento Obligatorio
 
 - [✔] **Build Local:** El proyecto compila o transpila sin errores en el entorno local.
-- [✔] **Linter Pass (Modularity/Style):** El código cumple con las reglas estáticas de Checkstyle; cero advertencias, usando `src/main/resources/checkstyle.xml` basado en Google Java Style. Esto garantiza el atributo de Mantenibilidad de la norma ISO/IEC 25010.
+- [✔] **Linter Pass (Modularity/Style):** El código cumple con las reglas estáticas de Checkstyle; cero advertencias, usando `src/main/resources/checkstyle/checkstyle.xml` basado en Google Java Style. Esto garantiza el atributo de Mantenibilidad de la norma ISO/IEC 25010.
 - [✔] **Functional Correctness:** El 100% de las pruebas unitarias existentes pasan con éxito.
 - [✔] **Peer Review:** Todo Pull Request ha sido revisado y aprobado por al menos un compañero de equipo después de una revisión de código.
 - [✔] **Documentation:** El `README.md` y la documentación técnica de la carpeta `/docs` están actualizados.
-- [✔] **Commits:** El historial sigue estrictamente la convención de Conventional Commits (`feat:`, `fix:`, `docs:`, `style:`,    `refactor:`, `test:`, `chore:`).
+- [✔] **Commits:** El historial sigue estrictamente la convención de Conventional Commits (`feat:`, `fix:`, `docs:`, `style:`,   `refactor:`, `test:`, `chore:`).
 - [✔] **Automatización:** Los hooks de Husky están activos y bloquean el commit si falla el linter o las pruebas.
 
 ## ISO/IEC 25010

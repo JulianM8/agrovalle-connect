@@ -37,7 +37,7 @@ asignación de transporte construidos en los Sprints 2 y 3.
 | ID Tarea | Descripción técnica | Componente / Tecnología | Atributo ISO 25010 |
 |---|---|---|---|
 | T8.1 | Definir el DTO `SeguimientoResponse` (pedido, estado, fecha de creación, fecha estimada de llegada, fecha de entrega y un mensaje cuando aún no hay fecha estimada) | DTOs (record) | Usabilidad |
-| T8.2 | Ajustar `DespachoService.asignarVehiculo` para guardar la `fecha_estimada_llegada` del pedido igual a la fecha de la ruta cuando el pedido no la tiene (ver §7) y actualizar sus pruebas | Spring (@Service) | Adecuación funcional |
+| T8.2 | Ajustar `DespachoService.asignarVehiculo` para guardar la `fecha_estimada_llegada` del pedido igual a la fecha de la ruta cuando el pedido no la tiene y actualizar sus pruebas | Spring (@Service) | Adecuación funcional |
 | T8.3 | Implementar `PedidoService.consultarSeguimiento(pedidoId, usuarioId)`: valida que el pedido sea del comprador autenticado y devuelve el estado actual y la fecha estimada de llegada cuando exista | Spring (@Service) | Adecuación funcional |
 | T8.4 | Exponer `GET /api/v1/pedidos/{id}/seguimiento` (`ROLE_COMPRADOR`), con respuestas 200 y 404 (pedido inexistente o de otro comprador) | @RestController, Spring Security | Compatibilidad / Seguridad |
 | T8.5 | Escribir pruebas unitarias del seguimiento (200 con estado y fecha estimada, 200 con mensaje cuando no hay fecha, 404 de otro comprador, 403 sin rol `COMPRADOR`) (traducción del escenario BDD) | JUnit 5, MockMvc, Mockito | Mantenibilidad |
